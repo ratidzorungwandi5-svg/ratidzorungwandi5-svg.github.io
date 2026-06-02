@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Your Name | Personal Website</title>
-  <meta name="description" content="Personal website for Your Name - portfolio, projects, and contact." />
+  <title>Your Brand | Growth Marketing Agency</title>
+  <meta name="description" content="Growth marketing, digital strategy, and campaign design for ambitious brands." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -13,85 +13,122 @@
 <body>
   <header class="site-header">
     <div class="brand">
-      <a href="#hero">Your Name</a>
+      <a href="#hero">Your Brand</a>
     </div>
     <nav class="site-nav" aria-label="Main navigation">
-      <a href="#about">About</a>
-      <a href="#projects">Projects</a>
+      <a href="#hero">Home</a>
+      <a href="#services">Services</a>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#testimonials">Testimonials</a>
       <a href="#contact">Contact</a>
     </nav>
     <button class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
-    <button class="mobile-menu-button" aria-label="Open navigation menu">☰</button>
+    <button class="mobile-menu-button" aria-label="Open navigation menu" aria-expanded="false">☰</button>
   </header>
 
   <main>
     <section id="hero" class="hero">
-      <div class="hero-content">
-        <p class="eyebrow">Hello, I’m</p>
-        <h1>Your Name</h1>
-        <p class="hero-text">I build thoughtful web experiences, design modern interfaces, and share projects that solve real problems.</p>
+      <div class="hero-copy">
+        <p class="eyebrow">Growth Marketing</p>
+        <h1>We help ambitious brands launch products, generate demand, and convert more customers.</h1>
+        <p class="hero-text">Digital strategy, campaign design, and brand storytelling for B2B and SaaS teams that want measurable growth.</p>
         <div class="hero-actions">
-          <a class="button primary" href="#projects">See Projects</a>
-          <a class="button secondary" href="#contact">Contact Me</a>
+          <a class="button primary" href="#contact">Book a Call</a>
+          <a class="button secondary" href="#portfolio">View Case Studies</a>
         </div>
       </div>
-      <div class="hero-card">
-        <div class="profile-card">
-          <p class="profile-role">Full Stack Developer</p>
-          <p class="profile-location">Based in [City]</p>
-          <div class="profile-stats">
-            <div>
-              <strong>4+</strong>
-              <span>Years Experience</span>
-            </div>
-            <div>
-              <strong>20+</strong>
-              <span>Projects</span>
-            </div>
+      <div class="hero-panel">
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <strong>320%</strong>
+            <span>Average campaign ROI</span>
+          </div>
+          <div class="metric-card">
+            <strong>18%</strong>
+            <span>Lead conversion lift</span>
+          </div>
+          <div class="metric-card">
+            <strong>45+</strong>
+            <span>Brands supported</span>
+          </div>
+        </div>
+        <div class="trust-strip">
+          <span>Trusted by teams at</span>
+          <div class="trust-logos">
+            <span>Acme</span>
+            <span>Orion</span>
+            <span>Nova</span>
+            <span>Pulse</span>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="about" class="section section-about">
+    <section id="services" class="section section-services">
       <div class="section-header">
-        <p class="section-label">About</p>
-        <h2>About Me</h2>
+        <p class="section-label">Services</p>
+        <h2>Strategy-led marketing services</h2>
       </div>
-      <div class="section-grid">
-        <div>
-          <p>I’m a web developer who enjoys creating clean, accessible, and responsive websites. My focus is on building fast user experiences with modern tooling and thoughtful design.</p>
-          <p>Whether I’m working on a personal portfolio or a team product, I enjoy turning ideas into polished web applications.</p>
-        </div>
-        <div class="about-list">
-          <div><strong>Location:</strong> [City, Country]</div>
-          <div><strong>Role:</strong> Frontend / Full Stack Developer</div>
-          <div><strong>Tech:</strong> HTML, CSS, JavaScript, React, Node.js</div>
-          <div><strong>Email:</strong> hello@example.com</div>
-        </div>
+      <div class="service-grid">
+        <article class="service-card">
+          <h3>Brand Positioning</h3>
+          <p>Craft compelling messaging and digital experiences that differentiate your product and build trust.</p>
+        </article>
+        <article class="service-card">
+          <h3>Growth Campaigns</h3>
+          <p>Plan and execute acquisition programs that drive qualified traffic, leads, and revenue.</p>
+        </article>
+        <article class="service-card">
+          <h3>Conversion Optimization</h3>
+          <p>Improve funnel performance with landing pages, email workflows, and CRO testing that turns visitors into buyers.</p>
+        </article>
+        <article class="service-card">
+          <h3>Content & Funnels</h3>
+          <p>Deliver persuasive content and automated funnels tailored to your audience and growth goals.</p>
+        </article>
       </div>
     </section>
 
-    <section id="projects" class="section section-projects">
+    <section id="portfolio" class="section section-portfolio">
       <div class="section-header">
-        <p class="section-label">Projects</p>
-        <h2>Featured Work</h2>
+        <p class="section-label">Portfolio</p>
+        <h2>Selected case studies</h2>
       </div>
       <div class="project-grid">
         <article class="project-card">
-          <h3>Project One</h3>
-          <p>A short description of one of your best projects, including the impact or technology used.</p>
-          <a href="#">View details</a>
+          <span class="project-tag">SaaS launch</span>
+          <h3>Launch campaign for revenue software</h3>
+          <p>Designed a performance-driven launch funnel that doubled product trials and cut acquisition costs by 28%.</p>
+          <a href="#contact">Learn more</a>
         </article>
         <article class="project-card">
-          <h3>Project Two</h3>
-          <p>A short description of another project with emphasis on design, performance, or user experience.</p>
-          <a href="#">View details</a>
+          <span class="project-tag">Brand refresh</span>
+          <h3>Repositioning for a B2B compliance tool</h3>
+          <p>Built a new content strategy, messaging framework, and landing experience to increase demo requests.</p>
+          <a href="#contact">Learn more</a>
         </article>
         <article class="project-card">
-          <h3>Project Three</h3>
-          <p>A short description of another project or contribution that demonstrates your skills.</p>
-          <a href="#">View details</a>
+          <span class="project-tag">Retention growth</span>
+          <h3>Lifecycle campaigns for a subscription product</h3>
+          <p>Created automated nurture sequences that increased customer retention and repeat purchases.</p>
+          <a href="#contact">Learn more</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="testimonials" class="section section-testimonials">
+      <div class="section-header">
+        <p class="section-label">Testimonials</p>
+        <h2>What our clients say</h2>
+      </div>
+      <div class="testimonial-grid">
+        <article class="testimonial-card">
+          <p>“Their team helped us clarify our value proposition and delivered a campaign that exceeded every target. We saw a clear lift in qualified demos within 30 days.”</p>
+          <strong>— Maya R., VP of Marketing</strong>
+        </article>
+        <article class="testimonial-card">
+          <p>“A strategic partner who understood our audience and gave us the confidence to scale. The launch was smooth, and the results were outstanding.”</p>
+          <strong>— Daniel K., Founder</strong>
         </article>
       </div>
     </section>
@@ -99,18 +136,48 @@
     <section id="contact" class="section section-contact">
       <div class="section-header">
         <p class="section-label">Contact</p>
-        <h2>Let’s work together</h2>
+        <h2>Start your next campaign</h2>
       </div>
-      <p>If you’d like to collaborate, send me a message at <a href="mailto:hello@example.com">hello@example.com</a> or connect on GitHub.</p>
-      <div class="contact-links">
-        <a class="button primary" href="mailto:hello@example.com">Email Me</a>
-        <a class="button secondary" href="https://github.com/yourusername" target="_blank" rel="noreferrer">GitHub</a>
+      <div class="contact-grid">
+        <div class="contact-copy">
+          <p>Ready to grow your revenue, reach new customers, and launch a memorable campaign? Send a message and we’ll respond within one business day.</p>
+          <div class="contact-details">
+            <div>
+              <strong>Email</strong>
+              <a href="mailto:hello@example.com">hello@example.com</a>
+            </div>
+            <div>
+              <strong>Location</strong>
+              <span>[City, Country]</span>
+            </div>
+          </div>
+        </div>
+        <form id="contact-form" class="contact-form" novalidate>
+          <label>
+            Name
+            <input type="text" name="name" placeholder="Your name" required />
+          </label>
+          <label>
+            Company
+            <input type="text" name="company" placeholder="Company name" required />
+          </label>
+          <label>
+            Email
+            <input type="email" name="email" placeholder="you@example.com" required />
+          </label>
+          <label>
+            Message
+            <textarea name="message" rows="5" placeholder="Tell us about your project" required></textarea>
+          </label>
+          <button class="button primary" type="submit">Send Message</button>
+          <p id="form-message" class="form-message" aria-live="polite"></p>
+        </form>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <p>Made by Your Name · Built for GitHub Pages</p>
+    <p>Built for ambitious brands · Designed for performance</p>
   </footer>
 
   <script src="script.js"></script>

@@ -1,14 +1,27 @@
 :root {
   color-scheme: dark;
-  --bg: #0f172a;
-  --surface: rgba(15, 23, 42, 0.9);
+  --bg: #020617;
+  --surface: rgba(15, 23, 42, 0.92);
   --surface-strong: #111827;
   --text: #e2e8f0;
   --muted: #94a3b8;
   --accent: #38bdf8;
   --accent-strong: #0ea5e9;
   --border: rgba(148, 163, 184, 0.18);
-  --shadow: 0 20px 45px rgba(15, 23, 42, 0.25);
+  --shadow: 0 30px 70px rgba(15, 23, 42, 0.32);
+}
+
+html.light-theme {
+  color-scheme: light;
+  --bg: #f8fafc;
+  --surface: rgba(255, 255, 255, 0.96);
+  --surface-strong: #ffffff;
+  --text: #0f172a;
+  --muted: #475569;
+  --accent: #0ea5e9;
+  --accent-strong: #0284c7;
+  --border: rgba(15, 23, 42, 0.08);
+  --shadow: 0 30px 70px rgba(15, 23, 42, 0.08);
 }
 
 * {
@@ -23,7 +36,7 @@ body {
 body {
   margin: 0;
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: radial-gradient(circle at top, rgba(56, 189, 248, 0.08), transparent 25%), #020617;
+  background: radial-gradient(circle at top, rgba(56, 189, 248, 0.08), transparent 25%), var(--bg);
   color: var(--text);
   line-height: 1.6;
 }
@@ -38,8 +51,14 @@ a {
   text-decoration: none;
 }
 
-button {
+button,
+input,
+textarea {
   font: inherit;
+}
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .site-header {
@@ -57,8 +76,9 @@ button {
 }
 
 .brand a {
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.04em;
+  font-size: 1.1rem;
 }
 
 .site-nav {
@@ -74,6 +94,24 @@ button {
 
 .site-nav a:hover {
   color: var(--text);
+}
+
+.site-nav.open {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  right: 1.5rem;
+  width: min(260px, calc(100vw - 3rem));
+  padding: 1rem;
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.site-nav.open a {
+  padding: 0.85rem 0;
 }
 
 .theme-toggle,
@@ -92,13 +130,14 @@ button {
 
 .hero {
   display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
   gap: 2rem;
   padding: 4rem 1.5rem 2rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.hero-content {
+.hero-copy {
   max-width: 640px;
 }
 
@@ -113,13 +152,13 @@ button {
 
 .hero h1 {
   margin: 0;
-  font-size: clamp(2.75rem, 4vw, 4.25rem);
+  font-size: clamp(2.75rem, 4vw, 4.5rem);
   line-height: 1.02;
 }
 
 .hero-text {
   margin: 1.5rem 0 2rem;
-  max-width: 42rem;
+  max-width: 44rem;
   color: var(--muted);
 }
 
@@ -129,71 +168,63 @@ button {
   gap: 1rem;
 }
 
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.95rem 1.45rem;
-  border-radius: 999px;
-  font-weight: 600;
-  transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.button:hover {
-  transform: translateY(-1px);
-}
-
-.primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-  color: #0f172a;
-}
-
-.secondary {
-  background: rgba(148, 163, 184, 0.08);
-  color: var(--text);
-}
-
-.hero-card {
-  display: flex;
-  justify-content: center;
-}
-
-.profile-card {
-  width: min(420px, 100%);
+.hero-panel {
+  display: grid;
+  gap: 1.5rem;
   padding: 2rem;
-  border: 1px solid var(--border);
   border-radius: 32px;
   background: var(--surface);
+  border: 1px solid var(--border);
   box-shadow: var(--shadow);
 }
 
-.profile-role,
-.profile-location {
-  margin: 0;
-  color: var(--muted);
-}
-
-.profile-role {
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-}
-
-.profile-stats {
+.metrics-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
-  margin-top: 1.75rem;
 }
 
-.profile-stats div {
-  padding: 1rem;
-  border-radius: 20px;
+.metric-card {
+  padding: 1.5rem;
+  border-radius: 24px;
   background: rgba(255, 255, 255, 0.04);
 }
 
-.profile-stats strong {
+.metric-card strong {
   display: block;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
+}
+
+.metric-card span {
+  color: var(--muted);
+}
+
+.trust-strip {
+  padding: 1.35rem 1.25rem;
+  border-radius: 24px;
+  background: rgba(15, 23, 42, 0.7);
+  color: var(--muted);
+}
+
+.trust-strip span {
+  display: block;
+  margin-bottom: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.trust-logos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.trust-logos span {
+  padding: 0.85rem 1rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  text-align: center;
+  font-weight: 600;
 }
 
 .section {
@@ -222,39 +253,55 @@ button {
   font-size: clamp(2rem, 2.5vw, 2.75rem);
 }
 
-.section-about .section-grid,
-.project-grid {
+.section-services .service-grid,
+.project-grid,
+.testimonial-grid,
+.contact-grid {
   display: grid;
   gap: 1.5rem;
 }
 
-.section-about .section-grid {
-  grid-template-columns: 1.25fr 0.75fr;
+.service-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.about-list {
-  display: grid;
-  gap: 0.85rem;
-  color: var(--muted);
-}
-
-.project-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.project-card {
+.service-card,
+.project-card,
+.testimonial-card {
   padding: 1.85rem;
   border-radius: 28px;
   border: 1px solid var(--border);
-  background: rgba(15, 23, 42, 0.7);
+  background: var(--surface);
 }
 
+.service-card h3,
 .project-card h3 {
   margin-top: 0;
 }
 
-.project-card p {
+.service-card p,
+.project-card p,
+.testimonial-card p,
+.contact-copy p,
+.contact-details span,
+.contact-details a {
   color: var(--muted);
+}
+
+.project-card {
+  display: grid;
+  gap: 1rem;
+}
+
+.project-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 700;
 }
 
 .project-card a {
@@ -263,16 +310,89 @@ button {
   color: var(--accent);
 }
 
+.testimonial-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.testimonial-card p {
+  margin: 0 0 1.25rem;
+}
+
+.testimonial-card strong {
+  display: block;
+  color: var(--text);
+}
+
+.contact-grid {
+  grid-template-columns: 1fr 1.1fr;
+  align-items: start;
+}
+
+.contact-copy {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.contact-details {
+  display: grid;
+  gap: 1rem;
+}
+
+.contact-details div {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.contact-details strong {
+  color: var(--text);
+}
+
+.contact-form {
+  display: grid;
+  gap: 1rem;
+  padding: 1.75rem;
+  border-radius: 28px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid var(--border);
+}
+
+.contact-form label {
+  display: grid;
+  gap: 0.65rem;
+  font-weight: 600;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 0.95rem 1rem;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.12);
+}
+
+.form-message {
+  margin: 0;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.form-message.visible {
+  opacity: 1;
+}
+
 .section-contact p {
   max-width: 45rem;
   color: var(--muted);
-}
-
-.contact-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 1.5rem;
 }
 
 .site-footer {
@@ -283,9 +403,15 @@ button {
 
 @media (max-width: 900px) {
   .hero,
-  .section-about .section-grid,
-  .project-grid {
+  .service-grid,
+  .project-grid,
+  .testimonial-grid,
+  .contact-grid {
     grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding-top: 3rem;
   }
 
   .site-nav {
@@ -295,6 +421,10 @@ button {
   .mobile-menu-button {
     display: inline-flex;
   }
+
+  .site-header {
+    padding-bottom: 0.75rem;
+  }
 }
 
 @media (max-width: 640px) {
@@ -303,6 +433,10 @@ button {
   }
 
   .hero {
-    padding-top: 3rem;
+    gap: 1.5rem;
+  }
+
+  .trust-logos {
+    grid-template-columns: 1fr;
   }
 }
