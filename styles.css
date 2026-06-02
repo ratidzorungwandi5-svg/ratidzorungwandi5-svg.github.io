@@ -240,6 +240,42 @@ body {
   margin-bottom: 2rem;
 }
 
+.section-story .story-intro {
+  max-width: 760px;
+  margin-bottom: 2rem;
+  color: var(--muted);
+}
+
+.story-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.story-card {
+  display: grid;
+  gap: 1rem;
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.story-image {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+}
+
+.story-copy {
+  padding: 1.5rem;
+}
+
+.story-copy h3 {
+  margin: 0 0 0.75rem;
+}
+
 .section-label {
   color: var(--accent);
   font-weight: 700;
@@ -404,6 +440,7 @@ body {
 @media (max-width: 900px) {
   .hero,
   .service-grid,
+  .story-grid,
   .project-grid,
   .testimonial-grid,
   .contact-grid {
