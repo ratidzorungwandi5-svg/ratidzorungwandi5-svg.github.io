@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Name | Personal Website</title>
+  <meta name="description" content="Personal website for Your Name - portfolio, projects, and contact." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <a href="#hero">Your Name</a>
+    </div>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+    <button class="mobile-menu-button" aria-label="Open navigation menu">☰</button>
+  </header>
+
+  <main>
+    <section id="hero" class="hero">
+      <div class="hero-content">
+        <p class="eyebrow">Hello, I’m</p>
+        <h1>Your Name</h1>
+        <p class="hero-text">I build thoughtful web experiences, design modern interfaces, and share projects that solve real problems.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#projects">See Projects</a>
+          <a class="button secondary" href="#contact">Contact Me</a>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="profile-card">
+          <p class="profile-role">Full Stack Developer</p>
+          <p class="profile-location">Based in [City]</p>
+          <div class="profile-stats">
+            <div>
+              <strong>4+</strong>
+              <span>Years Experience</span>
+            </div>
+            <div>
+              <strong>20+</strong>
+              <span>Projects</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="section section-about">
+      <div class="section-header">
+        <p class="section-label">About</p>
+        <h2>About Me</h2>
+      </div>
+      <div class="section-grid">
+        <div>
+          <p>I’m a web developer who enjoys creating clean, accessible, and responsive websites. My focus is on building fast user experiences with modern tooling and thoughtful design.</p>
+          <p>Whether I’m working on a personal portfolio or a team product, I enjoy turning ideas into polished web applications.</p>
+        </div>
+        <div class="about-list">
+          <div><strong>Location:</strong> [City, Country]</div>
+          <div><strong>Role:</strong> Frontend / Full Stack Developer</div>
+          <div><strong>Tech:</strong> HTML, CSS, JavaScript, React, Node.js</div>
+          <div><strong>Email:</strong> hello@example.com</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="section section-projects">
+      <div class="section-header">
+        <p class="section-label">Projects</p>
+        <h2>Featured Work</h2>
+      </div>
+      <div class="project-grid">
+        <article class="project-card">
+          <h3>Project One</h3>
+          <p>A short description of one of your best projects, including the impact or technology used.</p>
+          <a href="#">View details</a>
+        </article>
+        <article class="project-card">
+          <h3>Project Two</h3>
+          <p>A short description of another project with emphasis on design, performance, or user experience.</p>
+          <a href="#">View details</a>
+        </article>
+        <article class="project-card">
+          <h3>Project Three</h3>
+          <p>A short description of another project or contribution that demonstrates your skills.</p>
+          <a href="#">View details</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact" class="section section-contact">
+      <div class="section-header">
+        <p class="section-label">Contact</p>
+        <h2>Let’s work together</h2>
+      </div>
+      <p>If you’d like to collaborate, send me a message at <a href="mailto:hello@example.com">hello@example.com</a> or connect on GitHub.</p>
+      <div class="contact-links">
+        <a class="button primary" href="mailto:hello@example.com">Email Me</a>
+        <a class="button secondary" href="https://github.com/yourusername" target="_blank" rel="noreferrer">GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Made by Your Name · Built for GitHub Pages</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
