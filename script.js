@@ -7,19 +7,6 @@ const formMessage = document.getElementById('form-message');
 const chatForm = document.getElementById('chat-form');
 const chatWindow = document.getElementById('chat-window');
 const chatInput = document.getElementById('chat-input');
-const explainerVideo = document.getElementById('explainer-video');
-const videoLinks = document.querySelectorAll('a[href="#video"]');
-
-videoLinks.forEach((link) => {
-  link.addEventListener('click', () => {
-    if (!explainerVideo) return;
-    window.setTimeout(() => {
-      explainerVideo.play().catch(() => {
-        // Autoplay may be blocked without user interaction, but click should allow play in most browsers.
-      });
-    }, 150);
-  });
-});
 
 const responseRules = [
   {
