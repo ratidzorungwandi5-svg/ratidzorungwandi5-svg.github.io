@@ -7,31 +7,56 @@ const formMessage = document.getElementById('form-message');
 const chatForm = document.getElementById('chat-form');
 const chatWindow = document.getElementById('chat-window');
 const chatInput = document.getElementById('chat-input');
+const explainerVideo = document.getElementById('explainer-video');
+const videoLinks = document.querySelectorAll('a[href="#video"]');
 
-const chatResponses = [
+videoLinks.forEach((link) => {
+  link.addEventListener('click', () => {
+    if (!explainerVideo) return;
+    window.setTimeout(() => {
+      explainerVideo.play().catch(() => {
+        // Autoplay may be blocked without user interaction, but click should allow play in most browsers.
+      });
+    }, 150);
+  });
+});
+
+const responseRules = [
   {
-    triggers: ['bitcoin', 'btc', 'crypto', 'digital asset'],
-    response: 'Bitcoin can play a role in long-term portfolios as a diversified digital asset. For most investors, it makes sense to allocate only a portion of capital, understand volatility, and keep a long-term horizon rather than trade daily.'
+    patterns: [/bitcoin|btc|crypto|digital asset/i],
+    response: 'Bitcoin can be a long-term allocation in a diversified portfolio. It is volatile, so many long-term investors limit exposure, keep secure storage, and treat it as part of an innovation + inflation hedge strategy rather than a core income asset.'
   },
   {
-    triggers: ['nyse', 'nasdaq', 'lse', 'tsx', 'hkex', 'sse', 'stock exchange', 'exchange', 'global market'],
-    response: 'Major stock exchanges each have their own strengths. NYSE and NASDAQ are home to U.S. large caps, LSE serves global blue chips, TSX leads in resources, and HKEX connects investors to Asia. A diversified global view helps balance opportunity and risk.'
+    patterns: [/nyse|nasdaq|lse|tsx|hkex|sse|stock exchange|stock market|exchange|market/i],
+    response: 'Different exchanges represent different geographies and sectors. NYSE and NASDAQ are U.S. heavyweights, LSE is strong in international blue chips, TSX has energy and resources, and HKEX provides access to Asia. A global market view helps you balance growth with diversification.'
   },
   {
-    triggers: ['black business', 'black-owned', 'black businesses', 'community business'],
-    response: 'Supporting Black-owned businesses is an important long-term investment in economic equity. Look for founders with strong vision, sustainable revenue, and opportunities for growth while also connecting capital with mentorship and market access.'
+    patterns: [/black[- ]?owned|black business|black businesses|black entrepreneur|black entrepreneurs/i],
+    response: 'Investing in Black-owned businesses is an important way to support financial inclusion and economic growth. Evaluate companies on their revenue model, leadership, scalability, and how capital will be used to build durable value for both the business and the community.'
   },
   {
-    triggers: ['long term', 'long-term', 'horizon', 'patient'],
-    response: 'Long-term investing means focusing on growth over years, not weeks. Keep a plan, rebalance when needed, invest in quality assets, and avoid making emotional decisions based on short-term market swings.'
+    patterns: [/business|company|startup|valuation|cash flow|earnings|revenue|profit|management/i],
+    response: 'When evaluating a business, look for durable revenue, a strong competitive moat, efficient cash flow, and a leadership team that understands execution. Good businesses often have repeat customers, disciplined margins, and a plan to reinvest profits smartly.'
   },
   {
-    triggers: ['portfolio', 'diversify', 'diversification', 'allocate'],
-    response: 'A resilient portfolio blends equities, cash flow businesses, ETFs, and growth assets like bitcoin. Diversification across markets and industries helps reduce risk while preserving long-term upside.'
+    patterns: [/diversify|diversification|portfolio|allocation|balance/i],
+    response: 'A diversified portfolio blends multiple asset types: stocks, bonds, real assets, alternatives, and business stakes. Diversification helps reduce concentration risk and gives you options when one market segment underperforms.'
   },
   {
-    triggers: ['advice', 'recommend', 'should i'],
-    response: 'I provide general investing ideas. For personalized financial advice, speak with a licensed advisor who can evaluate your goals, time horizon, and risk tolerance.'
+    patterns: [/long[- ]?term|horizon|patient|years|decades/i],
+    response: 'Long-term investing means focusing on a multi-year horizon, not daily price moves. It is about compounding growth, maintaining discipline through volatility, and making allocations that can weather multiple economic cycles.'
+  },
+  {
+    patterns: [/risk|volatility|drawdown|loss|downside/i],
+    response: 'Risk management begins with position sizing, cash reserves, and understanding your own tolerance. It also means using diversified holdings and avoiding overconfidence in any single company or asset class.'
+  },
+  {
+    patterns: [/retirement|401k|ira|pension|savings/i],
+    response: 'For retirement investing, prioritize low-cost diversified funds, consistent contributions, and a gradual shift to more stable assets as you approach your goal. Tax-advantaged accounts can also improve your long-term returns.'
+  },
+  {
+    patterns: [/why|how|what|when|should/i],
+    response: 'Great question. For long-term investing, start by defining your goals, understanding your tolerance for volatility, and choosing assets that fit your time horizon. Ask me for specifics on bitcoin, global exchanges, business investing, or portfolio strategy.'
   }
 ];
 
@@ -48,13 +73,20 @@ const appendChatMessage = (role, text) => {
 };
 
 const getChatResponse = (message) => {
-  const normalized = message.toLowerCase();
-  for (const item of chatResponses) {
-    if (item.triggers.some((trigger) => normalized.includes(trigger))) {
-      return item.response;
-    }
+  const normalized = message.trim();
+
+  if (!normalized) {
+    return 'Please ask a question about investing, markets, or business strategy so I can help.';
   }
-  return 'That is a great question. For long-term investing, focus on your goals, stay diversified, and keep learning. You can ask me about bitcoin, global exchanges, or investing in Black-owned businesses.';
+
+  const matches = responseRules.filter((rule) => rule.patterns.some((pattern) => pattern.test(normalized)));
+
+  if (matches.length === 0) {
+    return 'That is a great question. For long-term investing, focus on your goals, stay diversified, and keep learning. Ask me about bitcoin, global markets, business investing, or portfolio construction.';
+  }
+
+  const response = matches.map((rule) => rule.response);
+  return [...new Set(response)].join(' ');
 };
 
 if (themeToggle) {
