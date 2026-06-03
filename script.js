@@ -10,6 +10,7 @@ const chatInput = document.getElementById('chat-input');
 const stockRefreshButton = document.getElementById('stock-refresh');
 const stockBoardBody = document.getElementById('stock-prices-body');
 const stockLastUpdated = document.getElementById('stock-last-updated');
+const stockChangeLog = document.getElementById('stock-change-log');
 
 const stockSymbols = ['IBM', 'JPM', 'DIS', 'KO', 'CAT', 'MCD', 'XOM', 'VZ', 'GE', 'BA', 'CVS', 'PFE', 'PG', 'T', 'AXP', 'HD'];
 const previousStockPrices = {};
@@ -34,6 +35,27 @@ const formatChange = (current, previous) => {
   return `${sign}${Math.abs(delta).toFixed(2)}`;
 };
 
+const appendStockChange = (row, previous) => {
+  if (!stockChangeLog || previous == null || row.price == null || row.price === previous) return;
+
+  const delta = row.price - previous;
+  const direction = delta > 0 ? '▲' : '▼';
+  const className = delta > 0 ? 'stock-change-up' : 'stock-change-down';
+
+  const entry = document.createElement('li');
+  entry.className = `stock-change-item ${className}`;
+  entry.innerHTML = `<span><strong>${row.symbol}</strong> ${direction} ${Math.abs(delta).toFixed(2)} to $${row.price.toFixed(2)}</span><span>${row.time || 'now'}</span>`;
+
+  if (stockChangeLog.children.length === 1 && stockChangeLog.children[0].textContent?.includes('No changes yet')) {
+    stockChangeLog.innerHTML = '';
+  }
+
+  stockChangeLog.prepend(entry);
+  while (stockChangeLog.childElementCount > 8) {
+    stockChangeLog.removeChild(stockChangeLog.lastChild);
+  }
+};
+
 const updateStockBoard = (rows) => {
   if (!stockBoardBody || !stockLastUpdated) return;
 
@@ -49,13 +71,14 @@ const updateStockBoard = (rows) => {
           : 'no-change';
 
     if (row.price != null) {
+      appendStockChange(row, previous);
       previousStockPrices[row.symbol] = row.price;
     }
 
     return `
       <tr>
         <td>${row.symbol}</td>
-        <td>${row.price != null ? row.price.toFixed(2) : 'N/A'}</td>
+        <td>${row.price != null ? `$${row.price.toFixed(2)}` : 'N/A'}</td>
         <td class="${changeClass}">${changeValue}</td>
         <td>${row.time || '—'}</td>
       </tr>
