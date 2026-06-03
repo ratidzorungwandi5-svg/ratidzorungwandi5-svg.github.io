@@ -7,6 +7,79 @@ const formMessage = document.getElementById('form-message');
 const chatForm = document.getElementById('chat-form');
 const chatWindow = document.getElementById('chat-window');
 const chatInput = document.getElementById('chat-input');
+const stockRefreshButton = document.getElementById('stock-refresh');
+const stockBoardBody = document.getElementById('stock-prices-body');
+const stockLastUpdated = document.getElementById('stock-last-updated');
+
+const stockSymbols = ['IBM', 'JPM', 'DIS', 'KO', 'CAT', 'MCD', 'XOM', 'VZ', 'GE', 'BA', 'CVS', 'PFE', 'PG', 'T', 'AXP', 'HD'];
+const previousStockPrices = {};
+
+const parseStooqCsv = (csvText) => {
+  const lines = csvText.trim().split('\n');
+  if (lines.length < 2) return null;
+  const values = lines[1].split(',');
+  const close = parseFloat(values[6]);
+  return {
+    symbol: values[0].replace('.US', ''),
+    date: values[1],
+    time: values[2],
+    price: Number.isNaN(close) ? null : close
+  };
+};
+
+const formatChange = (current, previous) => {
+  if (previous == null || current == null) return '—';
+  const delta = current - previous;
+  const sign = delta > 0 ? '+' : delta < 0 ? '-' : '';
+  return `${sign}${Math.abs(delta).toFixed(2)}`;
+};
+
+const updateStockBoard = (rows) => {
+  if (!stockBoardBody || !stockLastUpdated) return;
+
+  const tableRows = rows.map((row) => {
+    const previous = previousStockPrices[row.symbol];
+    const changeValue = formatChange(row.price, previous);
+    const changeClass = previous == null || row.price == null
+      ? 'no-change'
+      : row.price > previous
+        ? 'price-up'
+        : row.price < previous
+          ? 'price-down'
+          : 'no-change';
+
+    if (row.price != null) {
+      previousStockPrices[row.symbol] = row.price;
+    }
+
+    return `
+      <tr>
+        <td>${row.symbol}</td>
+        <td>${row.price != null ? row.price.toFixed(2) : 'N/A'}</td>
+        <td class="${changeClass}">${changeValue}</td>
+        <td>${row.time || '—'}</td>
+      </tr>
+    `;
+  }).join('');
+
+  stockBoardBody.innerHTML = tableRows || '<tr><td colspan="4">No data available.</td></tr>';
+  stockLastUpdated.textContent = `Last updated: ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+};
+
+const fetchStockPrices = async () => {
+  if (!stockBoardBody || !stockLastUpdated) return;
+
+  const requests = stockSymbols.map((symbol) =>
+    fetch(`https://stooq.com/q/l/?s=${symbol.toLowerCase()}.us&f=sd2t2ohlcv&h&e=csv`)
+      .then((response) => response.text())
+      .then(parseStooqCsv)
+      .catch(() => ({ symbol, price: null, time: '—' }))
+  );
+
+  const results = await Promise.all(requests);
+  const validResults = results.filter((item) => item && item.symbol);
+  updateStockBoard(validResults);
+};
 
 const definitions = {
   calculus: 'Calculus is the branch of mathematics that studies change and accumulation. It includes derivatives for rates of change and integrals for total accumulation over time.',
@@ -16,7 +89,7 @@ const definitions = {
   atom: 'An atom is the smallest unit of a chemical element that retains its properties. It consists of protons, neutrons, and electrons.',
   molecule: 'A molecule is a group of atoms bonded together to form a stable chemical structure. Molecules make up compounds and most materials around us.',
   stoichiometry: 'Stoichiometry is the quantitative study of reactants and products in chemical reactions. It helps calculate how much of each substance is needed or produced.',
-  periodic table: 'The periodic table organizes all known chemical elements by atomic number and properties. It reveals patterns in element behavior and reactivity.',
+  'periodic table': 'The periodic table organizes all known chemical elements by atomic number and properties. It reveals patterns in element behavior and reactivity.',
   force: 'In physics, a force is any interaction that changes an object’s motion. Common forces include gravity, friction, tension, and electromagnetic forces.',
   energy: 'Energy is the ability to do work or cause change. It can appear as kinetic energy, potential energy, thermal energy, and more.',
   momentum: 'Momentum is the product of an object’s mass and velocity. It is conserved in isolated systems, making it a key concept in collisions and motion.',
@@ -39,7 +112,7 @@ const responseRules = [
   },
   {
     patterns: [/black[- ]?owned|black business|black businesses|black entrepreneur|black entrepreneurs/i],
-    response: 'Investing in Black-owned businesses can support inclusion and community wealth. Evaluate the business model, leadership, runway, and how capital will be used to build durable value.'
+    response: 'Investing in  businesses can support inclusion and community wealth. Evaluate the business model, leadership, runway, and how capital will be used to build durable value.'
   },
   {
     patterns: [/business|company|startup|valuation|cash flow|earnings|revenue|profit|management/i],
@@ -179,3 +252,10 @@ if (chatForm) {
     }, 450);
   });
 }
+
+if (stockRefreshButton) {
+  stockRefreshButton.addEventListener('click', fetchStockPrices);
+}
+
+fetchStockPrices();
+setInterval(fetchStockPrices, 60000);

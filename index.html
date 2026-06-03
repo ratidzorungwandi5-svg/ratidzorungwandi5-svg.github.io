@@ -124,6 +124,32 @@
       </div>
     </section>
 
+    <section id="stock-prices" class="section section-stocks">
+      <div class="section-header">
+        <p class="section-label">NYSE Live Prices</p>
+        <h2>Track selected New York Stock Exchange quotes in real time.</h2>
+      </div>
+      <div class="stock-board">
+        <div class="stock-controls">
+          <span id="stock-last-updated">Last updated: —</span>
+          <button id="stock-refresh" class="button secondary" type="button">Refresh now</button>
+        </div>
+        <table class="stock-table" aria-label="NYSE stock price updates">
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Price</th>
+              <th>Change</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody id="stock-prices-body">
+            <tr><td colspan="4">Loading live NYSE prices…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
     <section id="black-business" class="section section-portfolio">
       <div class="section-header">
         <p class="section-label">Black Business Growth</p>
@@ -188,6 +214,16 @@
           </label>
           <button class="button primary" type="submit">Send</button>
           <p class="chat-note">This chatbot offers general investing guidance, not personalized financial advice.</p>
+          <div class="chat-examples">
+            <p>Need inspiration? Try asking:</p>
+            <ul>
+              <li>How does diversification protect my portfolio?</li>
+              <li>Explain a derivative in calculus.</li>
+              <li>What is stoichiometry?</li>
+              <li>How does gravity affect momentum?</li>
+              <li>How should I invest in a Black-owned startup?</li>
+            </ul>
+          </div>
         </form>
       </div>
     </section>
