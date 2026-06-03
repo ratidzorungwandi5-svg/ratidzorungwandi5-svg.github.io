@@ -3,12 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Long-Term Investing | Bitcoin, Markets, and Black Business Growth</title>
+  <meta name="theme-color" content="#38bdf8" />
   <meta name="description" content="Long-term investing guidance for bitcoin, global stock exchanges, and Black-owned business growth. Watch the explainer video and ask the investment chatbot for help." />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Invest Horizon" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <title>Long-Term Investing | Bitcoin, Markets, and Black Business Growth</title>
 </head>
 <body>
   <header class="site-header">
@@ -132,7 +137,10 @@
       <div class="stock-board">
         <div class="stock-controls">
           <span id="stock-last-updated">Last updated: —</span>
-          <button id="stock-refresh" class="button secondary" type="button">Refresh now</button>
+          <div class="stock-control-buttons">
+            <button id="stock-refresh" class="button secondary" type="button">Refresh now</button>
+            <button id="stock-download" class="button secondary" type="button">Download CSV</button>
+          </div>
         </div>
         <table class="stock-table" aria-label="NYSE stock price updates">
           <thead>

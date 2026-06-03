@@ -8,6 +8,7 @@ const chatForm = document.getElementById('chat-form');
 const chatWindow = document.getElementById('chat-window');
 const chatInput = document.getElementById('chat-input');
 const stockRefreshButton = document.getElementById('stock-refresh');
+const stockDownloadButton = document.getElementById('stock-download');
 const stockBoardBody = document.getElementById('stock-prices-body');
 const stockLastUpdated = document.getElementById('stock-last-updated');
 const stockChangeLog = document.getElementById('stock-change-log');
@@ -278,6 +279,41 @@ if (chatForm) {
 
 if (stockRefreshButton) {
   stockRefreshButton.addEventListener('click', fetchStockPrices);
+}
+
+if (stockDownloadButton) {
+  stockDownloadButton.addEventListener('click', () => {
+    const csvRows = ['Symbol,Price,Change,Time'];
+    const rows = stockBoardBody.querySelectorAll('tr');
+    rows.forEach((row) => {
+      const cells = row.querySelectorAll('td');
+      if (cells.length === 4) {
+        const symbol = cells[0].textContent.trim();
+        const price = cells[1].textContent.trim();
+        const change = cells[2].textContent.trim();
+        const time = cells[3].textContent.trim();
+        csvRows.push(`"${symbol}","${price}","${change}","${time}"`);
+      }
+    });
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `NYSE-prices-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+}
+
+// Register service worker for PWA offline support
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .catch((error) => console.log('Service Worker registration failed:', error));
+  });
 }
 
 fetchStockPrices();

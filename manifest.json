@@ -1,0 +1,62 @@
+{
+  "name": "Invest Horizon - Long-Term Investing Guide",
+  "short_name": "Invest Horizon",
+  "description": "Long-term investing guidance for bitcoin, global stock exchanges, and Black-owned business growth with live NYSE stock prices.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0a0a",
+  "theme_color": "#38bdf8",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%2338bdf8' width='192' height='192'/><text x='50%' y='50%' font-size='80' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='middle'>IH</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%2338bdf8' width='512' height='512'/><text x='50%' y='50%' font-size='240' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='middle'>IH</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "business"],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect fill='%230a0a0a' width='540' height='720'/><text x='20' y='60' font-size='32' font-weight='bold' fill='%2338bdf8'>Invest Horizon</text><rect x='20' y='100' width='500' height='200' fill='%23ffffff' fill-opacity='0.1' rx='12'/><text x='30' y='150' font-size='18' fill='white'>NYSE Live Prices</text><text x='30' y='200' font-size='14' fill='%23888'>IBM, JPM, DIS...</text><rect x='20' y='320' width='500' height='150' fill='%23ffffff' fill-opacity='0.1' rx='12'/><text x='30' y='370' font-size='18' fill='white'>Investment Guide</text></svg>",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Live Prices",
+      "short_name": "Prices",
+      "description": "View live NYSE stock prices",
+      "url": "/#stock-prices",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect fill='%2338bdf8' width='96' height='96'/><text x='48' y='48' font-size='50' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='middle'>$</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Chatbot",
+      "short_name": "Chat",
+      "description": "Ask investing and educational questions",
+      "url": "/#chatbot",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect fill='%2338bdf8' width='96' height='96'/><text x='48' y='48' font-size='50' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='middle'>?</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ]
+}
