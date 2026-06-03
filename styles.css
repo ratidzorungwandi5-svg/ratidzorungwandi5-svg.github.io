@@ -455,6 +455,11 @@ body {
 .section-stocks .stock-board {
   display: grid;
   gap: 1rem;
+  overflow-x: auto;
+}
+
+.stock-table {
+  min-width: 720px;
 }
 
 .stock-controls {
@@ -493,6 +498,11 @@ body {
   color: var(--muted);
   font-weight: 600;
 }
+
+.stock-table td.delta-cell {
+  text-align: right;
+}
+
 
 .stock-log {
   margin-top: 1.5rem;

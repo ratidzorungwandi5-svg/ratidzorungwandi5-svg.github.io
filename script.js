@@ -15,18 +15,24 @@ const stockChangeLog = document.getElementById('stock-change-log');
 
 const stockSymbols = ['IBM', 'JPM', 'DIS', 'KO', 'CAT', 'MCD', 'XOM', 'VZ', 'GE', 'BA', 'CVS', 'PFE', 'PG', 'T', 'AXP', 'HD'];
 const previousStockPrices = {};
+const stockHistory = {};
+const latestStockData = {};
 
 const parseStooqCsv = (csvText) => {
-  const lines = csvText.trim().split('\n');
-  if (lines.length < 2) return null;
-  const values = lines[1].split(',');
-  const close = parseFloat(values[6]);
-  return {
-    symbol: values[0].replace('.US', ''),
-    date: values[1],
-    time: values[2],
-    price: Number.isNaN(close) ? null : close
-  };
+  const lines = csvText.trim().split('\n').filter(Boolean);
+  if (lines.length < 2) return [];
+  return lines.slice(1).map((line) => {
+    const values = line.split(',');
+    const close = parseFloat(values[6]);
+    const open = parseFloat(values[3]);
+    return {
+      symbol: values[0].replace('.US', ''),
+      date: values[1],
+      time: values[2],
+      open: Number.isNaN(open) ? null : open,
+      price: Number.isNaN(close) ? null : close
+    };
+  });
 };
 
 const formatChange = (current, previous) => {
@@ -34,6 +40,31 @@ const formatChange = (current, previous) => {
   const delta = current - previous;
   const sign = delta > 0 ? '+' : delta < 0 ? '-' : '';
   return `${sign}${Math.abs(delta).toFixed(2)}`;
+};
+
+const formatDelta = (delta) => {
+  if (delta == null) return '—';
+  const sign = delta > 0 ? '+' : delta < 0 ? '-' : '';
+  return `${sign}$${Math.abs(delta).toFixed(2)}`;
+};
+
+const formatDeltaClass = (delta) => {
+  if (delta == null) return 'no-change';
+  return delta > 0 ? 'price-up' : delta < 0 ? 'price-down' : 'no-change';
+};
+
+const computeDelta = (symbol, intervalMs, currentPrice) => {
+  const history = stockHistory[symbol] || [];
+  if (currentPrice == null || history.length === 0) return null;
+
+  const now = Date.now();
+  for (let i = history.length - 1; i >= 0; i -= 1) {
+    const snapshot = history[i];
+    if (now - snapshot.time >= intervalMs) {
+      return currentPrice - snapshot.price;
+    }
+  }
+  return null;
 };
 
 const appendStockChange = (row, previous) => {
@@ -60,16 +91,24 @@ const appendStockChange = (row, previous) => {
 const updateStockBoard = (rows) => {
   if (!stockBoardBody || !stockLastUpdated) return;
 
+  const now = Date.now();
   const tableRows = rows.map((row) => {
     const previous = previousStockPrices[row.symbol];
-    const changeValue = formatChange(row.price, previous);
-    const changeClass = previous == null || row.price == null
-      ? 'no-change'
-      : row.price > previous
-        ? 'price-up'
-        : row.price < previous
-          ? 'price-down'
-          : 'no-change';
+    if (row.price != null) {
+      stockHistory[row.symbol] = [...(stockHistory[row.symbol] || []), { price: row.price, time: now }];
+      stockHistory[row.symbol] = stockHistory[row.symbol].filter((snapshot) => now - snapshot.time <= 24 * 60 * 60 * 1000);
+      latestStockData[row.symbol] = { price: row.price, open: row.open };
+    }
+
+    const delta1s = row.price != null ? computeDelta(row.symbol, 1000, row.price) : null;
+    const delta1m = row.price != null ? computeDelta(row.symbol, 60 * 1000, row.price) : null;
+    const delta1h = row.price != null ? computeDelta(row.symbol, 60 * 60 * 1000, row.price) : null;
+    const delta1d = row.price != null && row.open != null ? row.price - row.open : null;
+
+    const delta1sClass = formatDeltaClass(delta1s);
+    const delta1mClass = formatDeltaClass(delta1m);
+    const delta1hClass = formatDeltaClass(delta1h);
+    const delta1dClass = formatDeltaClass(delta1d);
 
     if (row.price != null) {
       appendStockChange(row, previous);
@@ -77,32 +116,73 @@ const updateStockBoard = (rows) => {
     }
 
     return `
-      <tr>
+      <tr data-symbol="${row.symbol}">
         <td>${row.symbol}</td>
         <td>${row.price != null ? `$${row.price.toFixed(2)}` : 'N/A'}</td>
-        <td class="${changeClass}">${changeValue}</td>
+        <td class="delta-cell delta-1s ${delta1sClass}">${formatDelta(delta1s)}</td>
+        <td class="delta-cell delta-1m ${delta1mClass}">${formatDelta(delta1m)}</td>
+        <td class="delta-cell delta-1h ${delta1hClass}">${formatDelta(delta1h)}</td>
+        <td class="delta-cell delta-1d ${delta1dClass}">${formatDelta(delta1d)}</td>
         <td>${row.time || '—'}</td>
       </tr>
     `;
   }).join('');
 
-  stockBoardBody.innerHTML = tableRows || '<tr><td colspan="4">No data available.</td></tr>';
-  stockLastUpdated.textContent = `Last updated: ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  stockBoardBody.innerHTML = tableRows || '<tr><td colspan="7">No data available.</td></tr>';
+  stockLastUpdated.textContent = `Last updated: ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
+};
+
+const updateStockDeltas = () => {
+  if (!stockBoardBody) return;
+
+  stockBoardBody.querySelectorAll('tr[data-symbol]').forEach((row) => {
+    const symbol = row.dataset.symbol;
+    const latest = latestStockData[symbol];
+    if (!latest || latest.price == null) return;
+
+    const delta1s = computeDelta(symbol, 1000, latest.price);
+    const delta1m = computeDelta(symbol, 60 * 1000, latest.price);
+    const delta1h = computeDelta(symbol, 60 * 60 * 1000, latest.price);
+    const delta1d = latest.open != null ? latest.price - latest.open : null;
+
+    const cells = {
+      sec: row.querySelector('.delta-1s'),
+      min: row.querySelector('.delta-1m'),
+      hour: row.querySelector('.delta-1h'),
+      day: row.querySelector('.delta-1d')
+    };
+
+    if (cells.sec) {
+      cells.sec.textContent = formatDelta(delta1s);
+      cells.sec.className = `delta-cell delta-1s ${formatDeltaClass(delta1s)}`;
+    }
+    if (cells.min) {
+      cells.min.textContent = formatDelta(delta1m);
+      cells.min.className = `delta-cell delta-1m ${formatDeltaClass(delta1m)}`;
+    }
+    if (cells.hour) {
+      cells.hour.textContent = formatDelta(delta1h);
+      cells.hour.className = `delta-cell delta-1h ${formatDeltaClass(delta1h)}`;
+    }
+    if (cells.day) {
+      cells.day.textContent = formatDelta(delta1d);
+      cells.day.className = `delta-cell delta-1d ${formatDeltaClass(delta1d)}`;
+    }
+  });
 };
 
 const fetchStockPrices = async () => {
   if (!stockBoardBody || !stockLastUpdated) return;
 
-  const requests = stockSymbols.map((symbol) =>
-    fetch(`https://stooq.com/q/l/?s=${symbol.toLowerCase()}.us&f=sd2t2ohlcv&h&e=csv`)
-      .then((response) => response.text())
-      .then(parseStooqCsv)
-      .catch(() => ({ symbol, price: null, time: '—' }))
-  );
+  const symbolQuery = stockSymbols.map((symbol) => `${symbol.toLowerCase()}.us`).join(',');
+  const url = `https://stooq.com/q/l/?s=${symbolQuery}&f=sd2t2ohlcv&h&e=csv`;
 
-  const results = await Promise.all(requests);
-  const validResults = results.filter((item) => item && item.symbol);
-  updateStockBoard(validResults);
+  const responseText = await fetch(url)
+    .then((response) => response.text())
+    .catch(() => '');
+
+  const results = parseStooqCsv(responseText);
+  updateStockBoard(results);
 };
 
 const definitions = {
@@ -283,16 +363,19 @@ if (stockRefreshButton) {
 
 if (stockDownloadButton) {
   stockDownloadButton.addEventListener('click', () => {
-    const csvRows = ['Symbol,Price,Change,Time'];
+    const csvRows = ['Symbol,Price,1s Δ,1m Δ,1h Δ,Day Δ,Time'];
     const rows = stockBoardBody.querySelectorAll('tr');
     rows.forEach((row) => {
       const cells = row.querySelectorAll('td');
-      if (cells.length === 4) {
+      if (cells.length === 7) {
         const symbol = cells[0].textContent.trim();
         const price = cells[1].textContent.trim();
-        const change = cells[2].textContent.trim();
-        const time = cells[3].textContent.trim();
-        csvRows.push(`"${symbol}","${price}","${change}","${time}"`);
+        const delta1s = cells[2].textContent.trim();
+        const delta1m = cells[3].textContent.trim();
+        const delta1h = cells[4].textContent.trim();
+        const delta1d = cells[5].textContent.trim();
+        const time = cells[6].textContent.trim();
+        csvRows.push(`"${symbol}","${price}","${delta1s}","${delta1m}","${delta1h}","${delta1d}","${time}"`);
       }
     });
     const csvContent = csvRows.join('\n');
@@ -317,4 +400,5 @@ if ('serviceWorker' in navigator) {
 }
 
 fetchStockPrices();
-setInterval(fetchStockPrices, 60000);
+setInterval(fetchStockPrices, 10000);
+setInterval(updateStockDeltas, 1000);
