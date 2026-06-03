@@ -199,10 +199,168 @@ const definitions = {
   momentum: 'Momentum is the product of an object’s mass and velocity. It is conserved in isolated systems, making it a key concept in collisions and motion.',
   quantum: 'Quantum mechanics studies the behavior of particles at the smallest scales, where energy levels are discrete and classical physics no longer suffices.',
   relativity: 'Relativity, developed by Einstein, explains how time, space, and gravity are linked. It includes both special relativity and general relativity.',
+  gravity: 'Gravity is a fundamental force of attraction between all objects with mass. It is described by Newton\'s law of universal gravitation.',
+  velocity: 'Velocity is the rate of change of an object\'s position, including both speed and direction.',
+  acceleration: 'Acceleration is the rate of change of velocity. It occurs when speed, direction, or both change.',
+  'kinetic energy': 'Kinetic energy is the energy an object possesses due to its motion, calculated as (1/2)mv².',
+  'potential energy': 'Potential energy is stored energy due to an object\'s position or state, such as gravitational or elastic potential energy.',
+  wave: 'A wave is a disturbance that travels through space or a medium, carrying energy from one place to another.',
+  wavelength: 'Wavelength is the distance between consecutive crests or troughs in a wave.',
+  frequency: 'Frequency is the number of complete waves passing a point per unit time, measured in hertz.',
+  amplitude: 'Amplitude is the maximum displacement of a wave from its equilibrium position.',
+  sound: 'Sound is a mechanical wave that travels through a medium and can be perceived by the human ear.',
+  light: 'Light is electromagnetic radiation visible to the human eye, traveling at approximately 299,792,458 meters per second.',
+  reflection: 'Reflection is the bouncing back of light, sound, or other waves from a surface.',
+  refraction: 'Refraction is the bending of light or other waves when passing from one medium to another.',
+  'newton\'s first law': 'An object in motion stays in motion, and an object at rest stays at rest, unless acted on by an external force.',
+  'newton\'s second law': 'The force applied to an object equals the object\'s mass times its acceleration (F = ma).',
+  'newton\'s third law': 'For every action, there is an equal and opposite reaction.',
+  thermodynamics: 'Thermodynamics is the study of heat, temperature, and their relationship to energy and work.',
+  entropy: 'Entropy is a measure of disorder or randomness in a system. It tends to increase in isolated systems.',
+  electricity: 'Electricity is the flow of electrons through a conductor, creating a current that can do work.',
+  magnetism: 'Magnetism is the force exerted by magnetic fields, often created by moving electrons or permanent magnets.',
+  'electric field': 'An electric field is the region around a charged particle where it exerts a force on other charged particles.',
+  'magnetic field': 'A magnetic field is the region around a magnet or moving charge where magnetic forces are exerted.',
+  'atomic nucleus': 'The atomic nucleus is the dense, positively charged center of an atom, containing protons and neutrons.',
+  photon: 'A photon is a particle of light or electromagnetic radiation with energy proportional to its frequency.',
+  electron: 'An electron is a negatively charged subatomic particle that orbits the nucleus of an atom.',
+  proton: 'A proton is a positively charged subatomic particle found in the nucleus of an atom.',
+  neutron: 'A neutron is a neutral (uncharged) subatomic particle found in the nucleus of an atom.',
+  cell: 'A cell is the basic unit of life, containing cytoplasm, a nucleus, and organelles. All living organisms are made of cells.',
+  mitochondria: 'Mitochondria are organelles that generate energy for the cell through cellular respiration.',
+  chloroplast: 'Chloroplasts are organelles in plant cells that conduct photosynthesis to produce glucose and oxygen.',
+  nucleus: 'The nucleus is the membrane-bound organelle containing the cell\'s DNA and controlling cellular activities.',
+  ribosome: 'Ribosomes are organelles where proteins are synthesized based on instructions from mRNA.',
+  'endoplasmic reticulum': 'The endoplasmic reticulum is a network of membranes involved in protein and lipid synthesis.',
+  'golgi apparatus': 'The Golgi apparatus modifies, packages, and ships proteins from the endoplasmic reticulum.',
+  dna: 'DNA (deoxyribonucleic acid) is the molecule that carries genetic instructions for life in all living organisms.',
+  rna: 'RNA (ribonucleic acid) is a molecule that helps transfer genetic information and participate in protein synthesis.',
+  gene: 'A gene is a segment of DNA that codes for a specific protein or trait.',
+  chromosome: 'A chromosome is a structure of DNA and proteins that carries genes and genetic information.',
+  allele: 'An allele is a variant form of a gene that produces different traits.',
+  'genetic code': 'The genetic code is the system by which DNA sequences are translated into amino acids during protein synthesis.',
+  'photosynthesis': 'Photosynthesis is the process where plants convert light energy into chemical energy stored in glucose.',
+  'respiration': 'Cellular respiration is the process where cells break down glucose to release energy in the form of ATP.',
+  'atp': 'ATP (adenosine triphosphate) is the primary energy currency of cells.',
+  metabolism: 'Metabolism is the set of chemical reactions that occur in organisms to maintain life.',
+  enzyme: 'An enzyme is a protein that acts as a biological catalyst to speed up chemical reactions in cells.',
+  protein: 'A protein is a large organic molecule made of amino acids, serving functions like structure, enzymes, and signaling.',
+  'amino acid': 'An amino acid is an organic compound that serves as a building block for proteins.',
+  lipid: 'A lipid is a hydrophobic organic molecule including fats, oils, and cholesterol.',
+  carbohydrate: 'A carbohydrate is an organic molecule made of carbon, hydrogen, and oxygen, serving as energy and structure.',
+  evolution: 'Evolution is the change in organisms over time through natural selection and genetic variation.',
+  'natural selection': 'Natural selection is the process where organisms with beneficial traits are more likely to survive and reproduce.',
+  'speciation': 'Speciation is the evolutionary process by which new species arise from existing species.',
+  organism: 'An organism is a living individual made of cells that can grow, reproduce, and respond to their environment.',
+  tissue: 'A tissue is a group of similar cells that work together to perform a specific function.',
+  organ: 'An organ is a structure made of different tissues working together to perform a specific function.',
+  'ecosystem': 'An ecosystem is a community of organisms and the physical environment they inhabit.',
+  'fermentation': 'Fermentation is an anaerobic process that breaks down glucose without oxygen to produce energy.',
+  osmosis: 'Osmosis is the movement of water across a semipermeable membrane from areas of high water concentration to low.',
+  diffusion: 'Diffusion is the movement of particles from areas of high concentration to low concentration.',
+  noun: 'A noun is a word that represents a person, place, thing, or idea.',
+  verb: 'A verb is a word that shows an action, occurrence, or state of being.',
+  adjective: 'An adjective is a word that modifies or describes a noun.',
+  adverb: 'An adverb is a word that modifies a verb, adjective, or another adverb, often describing how something happens.',
+  pronoun: 'A pronoun is a word used in place of a noun, such as he, she, it, or they.',
+  preposition: 'A preposition is a word that shows the relationship between a noun and other words in a sentence.',
+  conjunction: 'A conjunction is a word that connects words, phrases, or clauses, such as and, but, or.',
+  metaphor: 'A metaphor is a figure of speech that compares two different things by saying one is the other.',
+  simile: 'A simile is a figure of speech that compares two things using like or as.',
+  idiom: 'An idiom is a phrase or expression whose meaning cannot be understood from the individual words alone.',
+  alliteration: 'Alliteration is the repetition of the same beginning sound in words close to each other.',
+  onomatopoeia: 'Onomatopoeia is a word that imitates the sound it represents, like buzz or hiss.',
+  oxymoron: 'An oxymoron is a figure of speech that combines contradictory terms, like bittersweet.',
+  pun: 'A pun is a play on words that uses multiple meanings or similar-sounding words for humor.',
+  protagonist: 'The protagonist is the main character in a story.',
+  antagonist: 'The antagonist is the character or force opposing the protagonist.',
+  plot: 'A plot is the sequence of events that make up a story.',
+  theme: 'A theme is the main idea or message of a story.',
+  tone: 'The tone of a piece of writing is the author\'s attitude toward the subject.',
+  mood: 'The mood is the feeling or atmosphere a piece of writing creates for the reader.',
+  irony: 'Irony is when the opposite of what is expected actually happens, or what is said differs from what is meant.',
+  symbolism: 'Symbolism is the use of symbols to represent ideas or qualities.',
+  hola: 'Hola means hello in Spanish.',
+  adios: 'Adiós means goodbye in Spanish.',
+  gracias: 'Gracias means thank you in Spanish.',
+  'por favor': 'Por favor means please in Spanish.',
+  'de nada': 'De nada means you\'re welcome in Spanish.',
+  si: 'Sí means yes in Spanish.',
+  no: 'No means no in Spanish.',
+  bien: 'Bien means well or good in Spanish.',
+  mal: 'Mal means bad or poorly in Spanish.',
+  agua: 'Agua means water in Spanish.',
+  comida: 'Comida means food in Spanish.',
+  amigo: 'Amigo means friend in Spanish.',
+  familia: 'Familia means family in Spanish.',
+  casa: 'Casa means house in Spanish.',
+  libro: 'Libro means book in Spanish.',
+  escuela: 'Escuela means school in Spanish.',
+  profesor: 'Profesor means teacher in Spanish.',
+  estudiante: 'Estudiante means student in Spanish.',
+  dia: 'Día means day in Spanish.',
+  noche: 'Noche means night in Spanish.',
+  tiempo: 'Tiempo means time or weather in Spanish.',
+  numero: 'Número means number in Spanish.',
+  color: 'Color means color in Spanish.',
+  trabajo: 'Trabajo means work or job in Spanish.',
+  dinero: 'Dinero means money in Spanish.',
+  algebra: 'Algebra is the branch of mathematics dealing with symbols and their operations. It involves solving equations, working with polynomials, and manipulating expressions.',
+  geometry: 'Geometry studies shapes, sizes, and properties of figures in space. It covers points, lines, planes, angles, triangles, circles, and three-dimensional solids.',
+  trigonometry: 'Trigonometry studies relationships between sides and angles in triangles. Key functions include sine, cosine, and tangent.',
+  matrix: 'A matrix is a rectangular array of numbers arranged in rows and columns. Matrices are used to solve systems of equations and represent transformations.',
+  equation: 'An equation is a mathematical statement that two expressions are equal, separated by an equals sign. Solving equations finds the values that make them true.',
+  variable: 'A variable is a symbol (usually a letter) that represents an unknown number in an equation or expression.',
+  coefficient: 'A coefficient is a number that multiplies a variable in an algebraic expression or equation.',
+  polynomial: 'A polynomial is an expression made of variables and constants combined using addition, subtraction, and multiplication.',
+  exponent: 'An exponent is a number that tells how many times a base number is multiplied by itself.',
+  logarithm: 'A logarithm is the inverse of an exponent. If b^x = a, then log_b(a) = x.',
+  probability: 'Probability measures the likelihood of an event occurring, expressed as a number between 0 and 1.',
+  statistics: 'Statistics is the branch of mathematics that collects, analyzes, and interprets data.',
+  mean: 'The mean is the average of a set of numbers, calculated by summing all values and dividing by the count.',
+  median: 'The median is the middle value in a sorted list of numbers.',
+  mode: 'The mode is the value that appears most frequently in a dataset.',
+  vector: 'A vector is a quantity with both magnitude and direction, often represented as an arrow.',
+  scalar: 'A scalar is a quantity with only magnitude, no direction.',
+  sequence: 'A sequence is an ordered list of numbers following a specific pattern or rule.',
+  series: 'A series is the sum of the terms in a sequence.',
+  element: 'An element is a pure substance made of only one type of atom, characterized by its atomic number.',
+  compound: 'A compound is a substance made of two or more elements chemically bonded in a fixed ratio.',
+  isotope: 'An isotope is a variant of an element with the same number of protons but different numbers of neutrons.',
+  ion: 'An ion is an atom or molecule with a net electric charge, having gained or lost electrons.',
+  cation: 'A cation is an ion with a positive charge, formed when an atom loses electrons.',
+  anion: 'An anion is an ion with a negative charge, formed when an atom gains electrons.',
+  oxidation: 'Oxidation is a chemical process where a substance loses electrons, often involving a reaction with oxygen.',
+  reduction: 'Reduction is a chemical process where a substance gains electrons.',
+  acid: 'An acid is a substance that donates protons (H+) in solution, has a pH less than 7, and tastes sour.',
+  base: 'A base is a substance that accepts protons in solution, has a pH greater than 7, and feels slippery.',
+  salt: 'A salt is an ionic compound formed from the reaction of an acid and a base.',
+  'ph scale': 'The pH scale measures acidity or basicity of a substance from 0 to 14, with 7 being neutral.',
+  catalyst: 'A catalyst is a substance that speeds up a chemical reaction without being consumed in the process.',
+  reactant: 'A reactant is a substance that participates in and is consumed during a chemical reaction.',
+  product: 'A product is a substance produced as a result of a chemical reaction.',
+  'equilibrium': 'Chemical equilibrium is the state where forward and reverse reaction rates are equal, and concentrations remain constant.',
+  'molar mass': 'Molar mass is the mass of one mole of a substance, expressed in grams per mole.',
+  'mole': 'A mole is a unit of measurement equal to Avogadro\'s number (6.022 × 10^23) of particles.',
+  'valence': 'Valence is the combining power of an element, relating to how many electrons it can share or transfer.',
+  'electron configuration': 'Electron configuration describes the arrangement of electrons around an atom in shells and subshells.',
+  'chemical bond': 'A chemical bond is an attraction between atoms that holds them together in molecules or compounds.',
+  'ionic bond': 'An ionic bond is formed between charged ions through electrostatic attraction.',
+  'covalent bond': 'A covalent bond is formed when atoms share electrons.',
+  'hydrogen bond': 'A hydrogen bond is a weak attraction between molecules containing hydrogen and highly electronegative atoms.',
   bitcoin: 'Bitcoin is a digital currency and store of value that operates on a distributed blockchain. It is known for volatility, decentralized control, and a limited supply.',
   portfolio: 'A portfolio is a collection of investments such as stocks, bonds, real assets, and alternatives. It should reflect your goals, risk tolerance, and time horizon.',
   diversification: 'Diversification spreads risk by holding different assets that respond differently to market conditions. It helps protect a portfolio from concentrated losses.',
-  'black-owned business': 'A Black-owned business is a company founded, owned, or controlled by Black entrepreneurs. Supporting these businesses helps drive economic equity and community growth.'
+  'black-owned business': 'A Black-owned business is a company founded, owned, or controlled by Black entrepreneurs. Supporting these businesses helps drive economic equity and community growth.',
+  'market cap': 'Market cap (market capitalization) is the total value of a company\'s outstanding stock shares.',
+  'p/e ratio': 'The P/E ratio (price-to-earnings) compares a company\'s stock price to its earnings per share.',
+  'roi': 'ROI (return on investment) measures the profit made on an investment as a percentage of the initial investment.',
+  'interest rate': 'An interest rate is the percentage charged or earned on borrowed or saved money.',
+  'dividend': 'A dividend is a portion of company profits distributed to shareholders.',
+  'ipo': 'An IPO (initial public offering) is when a company first sells its stock to the public.',
+  'bull market': 'A bull market is a prolonged period when stock prices are rising and investor confidence is high.',
+  'bear market': 'A bear market is a prolonged period when stock prices are falling and investor confidence is low.',
+  'volatility': 'Volatility measures how much an asset\'s price fluctuates over time.'
 };
 
 const responseRules = [
@@ -251,8 +409,112 @@ const responseRules = [
     response: 'Physics explains how the universe moves and transfers energy. Core ideas include force, energy, momentum, and conservation laws, while modern physics connects these ideas to quantum and relativistic phenomena.'
   },
   {
+    patterns: [/calculus|derivative|integral|limit|continuous/i],
+    response: 'Calculus studies change and accumulation. Derivatives measure rates of change (slopes), integrals calculate accumulated quantities (areas), and limits describe behavior approaching values. These concepts are fundamental to physics, engineering, and economics.'
+  },
+  {
+    patterns: [/algebra|polynomial|equation|variable|solve/i],
+    response: 'Algebra uses symbols and operations to solve problems. You work with variables, manipulate equations, and find unknown values. It\'s the foundation for higher mathematics and essential for physics, chemistry, and engineering.'
+  },
+  {
+    patterns: [/geometry|triangle|circle|angle|shape|area|volume|space/i],
+    response: 'Geometry studies shapes, sizes, and properties of figures. It covers points, lines, planes, angles, polygons, circles, and solids. Geometry is crucial for architecture, engineering, physics, and art.'
+  },
+  {
+    patterns: [/trigonometry|sine|cosine|tangent|sin|cos|tan/i],
+    response: 'Trigonometry explores relationships between sides and angles in triangles. The primary functions are sine, cosine, and tangent. It\'s used in physics, engineering, astronomy, and navigation.'
+  },
+  {
+    patterns: [/probability|statistics|mean|median|mode|average|distribution/i],
+    response: 'Statistics collects and analyzes data. Key measures include mean (average), median (middle value), and mode (most frequent). Understanding distributions helps interpret data and make predictions.'
+  },
+  {
+    patterns: [/bond|ionic|covalent|hydrogen|metallic|chemical bond/i],
+    response: 'Chemical bonds hold atoms together. Ionic bonds form between charged ions, covalent bonds involve shared electrons, and hydrogen bonds are weak interactions. Bond type determines compound properties.'
+  },
+  {
+    patterns: [/acid|base|ph|salt|neutral|alkaline|buffer/i],
+    response: 'Acids donate protons (pH < 7), bases accept protons (pH > 7), and neutral solutions have pH = 7. Salts form from acid-base reactions. Buffers resist pH changes and are critical in biochemistry.'
+  },
+  {
+    patterns: [/oxidation|reduction|redox|electron transfer/i],
+    response: 'Redox reactions involve electron transfer. Oxidation loses electrons, reduction gains electrons. These reactions power batteries, fuel cells, and cellular respiration. They\'re fundamental to energy production.'
+  },
+  {
+    patterns: [/catalyst|enzyme|reaction rate|equilibrium/i],
+    response: 'Catalysts speed up reactions without being consumed. Enzymes are biological catalysts. Equilibrium is reached when forward and reverse reactions balance. These concepts control reaction speed and direction.'
+  },
+  {
+    patterns: [/stoichiometry|mole|molar mass|balancing equation/i],
+    response: 'Stoichiometry quantifies chemical reactions. A mole equals 6.022 × 10^23 particles. Molar mass is grams per mole. Balancing equations ensures atoms are conserved and lets you calculate reactants and products.'
+  },
+  {
+    patterns: [/dna|rna|gene|chromosome|genetic|inheritance|trait/i],
+    response: 'DNA carries genetic instructions. Genes are DNA segments coding for traits. RNA transfers genetic information for protein synthesis. Chromosomes package DNA. Understanding genetics explains inheritance and evolution.'
+  },
+  {
+    patterns: [/photosynthesis|respiration|atp|energy|glucose|metabolism/i],
+    response: 'Photosynthesis converts light into chemical energy (glucose). Respiration releases that energy (ATP). ATP powers cellular work. These complementary processes cycle energy through ecosystems and sustain life.'
+  },
+  {
+    patterns: [/protein|amino acid|enzyme|catalyst|structure|function/i],
+    response: 'Proteins are amino acid chains. They perform countless functions: structure, catalysts (enzymes), signals, defense. Protein shape determines function. Understanding proteins explains how cells work.'
+  },
+  {
+    patterns: [/evolution|natural selection|mutation|adaptation|speciation|diversity/i],
+    response: 'Evolution is organisms changing over time through natural selection. Mutations create variation. Beneficial traits increase reproduction. Evolution explains adaptation, diversity, and life\'s history on Earth.'
+  },
+  {
+    patterns: [/ecology|ecosystem|population|community|organism|environment/i],
+    response: 'Ecology studies interactions between organisms and environments. Ecosystems contain communities (populations of species). Energy flows, nutrients cycle. Understanding ecology reveals how life sustains itself on Earth.'
+  },
+  {
+    patterns: [/diffusion|osmosis|transport|membrane|concentration|gradient/i],
+    response: 'Diffusion is particle movement from high to low concentration. Osmosis is water movement. Both are passive (no energy needed). Active transport uses energy. These processes move materials across membranes.'
+  },
+  {
+    patterns: [/grammar|noun|verb|adjective|adverb|pronoun|preposition|conjunction/i],
+    response: 'Grammar is the language system. Nouns name things, verbs show action, adjectives describe, adverbs modify verbs. Prepositions show relationships, conjunctions connect ideas. Pronouns replace nouns. Mastering grammar improves communication.'
+  },
+  {
+    patterns: [/figure of speech|metaphor|simile|idiom|personification|hyperbole/i],
+    response: 'Figures of speech enrich language. Metaphors compare by stating one thing IS another. Similes compare using like/as. Idioms have non-literal meanings. These techniques make writing vivid and engaging.'
+  },
+  {
+    patterns: [/literature|plot|character|theme|setting|conflict|resolution/i],
+    response: 'Literature elements create stories. Plot is the sequence of events. Characters drive the story. Theme is the main message. Setting is where and when. Conflict creates tension and resolution provides closure.'
+  },
+  {
+    patterns: [/tone|mood|alliteration|onomatopoeia|symbolism|irony|pun/i],
+    response: 'Literary devices add depth. Tone is the author\'s attitude, mood is the reader\'s feeling. Alliteration repeats sounds, onomatopoeia imitates sounds. Symbolism uses objects for ideas. Irony contrasts expectation and reality. Puns play on words.'
+  },
+  {
+    patterns: [/spanish|hola|adios|gracias|por favor|de nada|si|no|bien|mal/i],
+    response: 'Spanish basics: Hola (hello), Adiós (goodbye), Gracias (thank you), Por favor (please), De nada (you\'re welcome), Sí (yes), No (no), Bien (well), Mal (bad). These common phrases are essential for basic Spanish communication.'
+  },
+  {
+    patterns: [/spanish|agua|comida|casa|libro|escuela|familia|amigo|tiempo|trabajo/i],
+    response: 'Useful Spanish vocabulary: Agua (water), Comida (food), Casa (house), Libro (book), Escuela (school), Familia (family), Amigo (friend), Tiempo (time), Trabajo (work). Learning common nouns helps describe daily life and communicate needs.'
+  },
+  {
+    patterns: [/spanish|learning|conjugation|verb|tense|preterite|present|future/i],
+    response: 'Spanish verbs conjugate by tense and subject. Present describes current action, preterite describes past completed actions, future describes upcoming events. Irregular verbs don\'t follow standard patterns. Verbs are key to Spanish communication.'
+  },
+  {
+    patterns: [/how does|how do|how can|how to|way to|method for/i],
+    response: 'I can explain processes and methods across many topics. Ask me how something works—whether it\'s photosynthesis, derivatives, Spanish grammar, or investing strategies—and I\'ll break it down into clear steps.'
+  },
+  {
+    patterns: [/difference|between|compare|similar|same/i],
+    response: 'I can compare concepts from any field. Ask me the difference between related terms—like metaphor vs. simile, mitochondria vs. chloroplast, or stocks vs. bonds—and I\'ll explain the key distinctions.'
+  },
+  {
+    patterns: [/example|for instance|such as|like/i],
+    response: 'I can provide examples to illustrate concepts. Ask for an example of any term or concept from investing, math, science, English, or Spanish, and I\'ll give you a practical, easy-to-understand illustration.'
+  },
+  {
     patterns: [/define|definition|meaning|what does .* mean|what is .*|explain .*|describe .*/i],
-    response: 'Ask me to define a term or explain a concept, and I will give you a clear, concise answer across investing, math, science, or business topics.'
+    response: 'I can define terms and explain concepts across investing, math, science, English, Spanish, and business. Ask me to define a specific word or explain a concept, and I\'ll provide a clear, concise answer.'
   }
 ];
 
