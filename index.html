@@ -26,6 +26,7 @@
       <a href="#markets">Markets</a>
       <a href="#stock-prices">Stocks</a>
       <a href="#live-trades">Live Trades</a>
+      <a href="#games">Games</a>
       <a href="#black-business">Black Business</a>
       <a href="#video">Video</a>
       <a href="#chatbot">Chatbot</a>
@@ -212,6 +213,98 @@
           <div class="trade-stat">
             <span class="stat-label">Market Status</span>
             <span class="stat-value status-live">🟢 LIVE</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="games" class="section section-games">
+      <div class="section-header">
+        <p class="section-label">Interactive Games</p>
+        <h2>Learn while you play—trading, trivia, and more.</h2>
+      </div>
+      <div class="games-grid">
+        <!-- Stock Trading Simulator -->
+        <div class="game-card">
+          <h3>📈 Stock Trader</h3>
+          <p>Start with $10,000 and build your portfolio. Buy low, sell high!</p>
+          <button class="button primary" type="button" onclick="startStockTraderGame()">Play Now</button>
+          <div id="trader-game" class="game-content" style="display:none;">
+            <div class="game-stats">
+              <div>💰 Cash: <strong id="trader-cash">$10,000</strong></div>
+              <div>📊 Portfolio: <strong id="trader-portfolio">$0</strong></div>
+              <div>💵 Total: <strong id="trader-total">$10,000</strong></div>
+            </div>
+            <div class="game-area">
+              <div class="stock-selector">
+                <label>
+                  Stock:
+                  <select id="trader-stock">
+                    <option>IBM</option>
+                    <option>JPM</option>
+                    <option>DIS</option>
+                    <option>KO</option>
+                  </select>
+                </label>
+                <label>
+                  Shares:
+                  <input id="trader-shares" type="number" value="1" min="1" />
+                </label>
+                <button class="button secondary" type="button" onclick="buyStock()">Buy</button>
+                <button class="button secondary" type="button" onclick="sellStock()">Sell</button>
+              </div>
+              <div id="trader-holdings" class="holdings-list"></div>
+            </div>
+            <button class="button secondary" type="button" onclick="closeStockTraderGame()">Close Game</button>
+          </div>
+        </div>
+
+        <!-- Definition Matching Game -->
+        <div class="game-card">
+          <h3>🧩 Term Matcher</h3>
+          <p>Match science and finance terms with their definitions. Test your knowledge!</p>
+          <button class="button primary" type="button" onclick="startMatcherGame()">Play Now</button>
+          <div id="matcher-game" class="game-content" style="display:none;">
+            <div class="game-stats">
+              <div>✅ Matched: <strong id="matcher-score">0/6</strong></div>
+            </div>
+            <div class="game-area">
+              <div id="matcher-container" class="matcher-container"></div>
+            </div>
+            <button class="button secondary" type="button" onclick="closeMatcherGame()">Close Game</button>
+          </div>
+        </div>
+
+        <!-- Trivia Quiz -->
+        <div class="game-card">
+          <h3>🎯 Trivia Challenge</h3>
+          <p>Answer questions about investing, science, and business. How many can you get right?</p>
+          <button class="button primary" type="button" onclick="startTriviaGame()">Play Now</button>
+          <div id="trivia-game" class="game-content" style="display:none;">
+            <div class="game-stats">
+              <div>Score: <strong id="trivia-score">0</strong> / <strong id="trivia-total">10</strong></div>
+            </div>
+            <div class="game-area">
+              <div id="trivia-container" class="trivia-container"></div>
+            </div>
+            <button class="button secondary" type="button" onclick="closeTriviaGame()">Close Game</button>
+          </div>
+        </div>
+
+        <!-- Portfolio Builder -->
+        <div class="game-card">
+          <h3>🎲 Portfolio Roulette</h3>
+          <p>Spin the wheel and allocate $100,000 across different asset types!</p>
+          <button class="button primary" type="button" onclick="startPortfolioGame()">Play Now</button>
+          <div id="portfolio-game" class="game-content" style="display:none;">
+            <div class="game-stats">
+              <div>Total Allocation: <strong id="portfolio-total">$0 / $100,000</strong></div>
+            </div>
+            <div class="game-area">
+              <div id="portfolio-container" class="portfolio-container"></div>
+            </div>
+            <div class="portfolio-result" id="portfolio-result"></div>
+            <button class="button secondary" type="button" onclick="closePortfolioGame()">Close Game</button>
           </div>
         </div>
       </div>

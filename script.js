@@ -747,6 +747,359 @@ const generateNewTrade = () => {
   updateTradeStats(trade);
 };
 
+// ===== GAMES SYSTEM =====
+
+// Stock Trader Game
+let traderState = { cash: 10000, holdings: {} };
+
+const startStockTraderGame = () => {
+  traderState = { cash: 10000, holdings: {} };
+  document.getElementById('trader-game').style.display = 'block';
+  updateTraderDisplay();
+};
+
+const closeStockTraderGame = () => {
+  document.getElementById('trader-game').style.display = 'none';
+};
+
+const updateTraderDisplay = () => {
+  const portfolio = Object.values(traderState.holdings).reduce((sum, h) => sum + h.value, 0);
+  const total = traderState.cash + portfolio;
+  
+  document.getElementById('trader-cash').textContent = '$' + traderState.cash.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  document.getElementById('trader-portfolio').textContent = '$' + portfolio.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  document.getElementById('trader-total').textContent = '$' + total.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  
+  const holdingsList = document.getElementById('trader-holdings');
+  if (Object.keys(traderState.holdings).length === 0) {
+    holdingsList.innerHTML = '<p style="color: var(--muted); text-align: center;">No holdings yet. Buy some stocks!</p>';
+    return;
+  }
+  
+  holdingsList.innerHTML = Object.entries(traderState.holdings).map(([symbol, holding]) => `
+    <div class="holding">
+      <div>
+        <strong>${symbol}</strong> - ${holding.shares} shares @ $${holding.pricePerShare.toFixed(2)} = $${holding.value.toLocaleString('en-US', { maximumFractionDigits: 0 })}
+      </div>
+      <button onclick="sellAllStock('${symbol}')">Sell All</button>
+    </div>
+  `).join('');
+};
+
+const buyStock = () => {
+  const symbol = document.getElementById('trader-stock').value;
+  const shares = parseInt(document.getElementById('trader-shares').value);
+  const price = latestStockData[symbol]?.price || 100 + Math.random() * 50;
+  const cost = price * shares;
+  
+  if (cost > traderState.cash) {
+    alert(`Not enough cash! You need $${cost.toLocaleString('en-US', { maximumFractionDigits: 0 })}`);
+    return;
+  }
+  
+  traderState.cash -= cost;
+  if (!traderState.holdings[symbol]) {
+    traderState.holdings[symbol] = { shares: 0, value: 0, pricePerShare: 0 };
+  }
+  
+  const holding = traderState.holdings[symbol];
+  holding.shares += shares;
+  holding.value += cost;
+  holding.pricePerShare = holding.value / holding.shares;
+  
+  updateTraderDisplay();
+  alert(`✅ Bought ${shares} shares of ${symbol}`);
+};
+
+const sellStock = () => {
+  const symbol = document.getElementById('trader-stock').value;
+  const holding = traderState.holdings[symbol];
+  
+  if (!holding) {
+    alert('You don\'t own this stock!');
+    return;
+  }
+  
+  const shares = parseInt(document.getElementById('trader-shares').value);
+  if (shares > holding.shares) {
+    alert(`You only own ${holding.shares} shares`);
+    return;
+  }
+  
+  const price = latestStockData[symbol]?.price || 100 + Math.random() * 50;
+  const proceeds = price * shares;
+  const profitLoss = (price - holding.pricePerShare) * shares;
+  
+  traderState.cash += proceeds;
+  holding.shares -= shares;
+  holding.value -= holding.pricePerShare * shares;
+  
+  if (holding.shares === 0) {
+    delete traderState.holdings[symbol];
+  }
+  
+  updateTraderDisplay();
+  const profitText = profitLoss >= 0 ? `✅ Profit: $${profitLoss.toLocaleString('en-US', { maximumFractionDigits: 0 })}` : `❌ Loss: $${Math.abs(profitLoss).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+  alert(`Sold ${shares} shares of ${symbol}\n${profitText}`);
+};
+
+const sellAllStock = (symbol) => {
+  document.getElementById('trader-stock').value = symbol;
+  document.getElementById('trader-shares').value = traderState.holdings[symbol].shares;
+  sellStock();
+};
+
+// Definition Matcher Game
+let matcherState = { matched: 0, selected: null, pairs: [] };
+
+const matcherTerms = [
+  { term: 'Photosynthesis', def: 'Process plants use to convert light into glucose' },
+  { term: 'Mitochondria', def: 'Cellular organelle that produces energy (ATP)' },
+  { term: 'Derivative', def: 'Measure of how a function changes at a point' },
+  { term: 'Portfolio', def: 'Collection of investments like stocks and bonds' },
+  { term: 'Entropy', def: 'Measure of disorder in a system' },
+  { term: 'Bitcoin', def: 'Decentralized digital currency on blockchain' }
+];
+
+const startMatcherGame = () => {
+  matcherState = { matched: 0, selected: null, pairs: [] };
+  const container = document.getElementById('matcher-container');
+  const terms = matcherTerms.sort(() => Math.random() - 0.5);
+  
+  const left = terms.slice(0, 3);
+  const right = terms.slice(3);
+  
+  container.innerHTML = `
+    <div class="matcher-group">
+      <h4>Terms</h4>
+      ${left.map((item, i) => `<div class="matcher-item" onclick="selectMatcher(0, ${i})" id="term-0-${i}">${item.term}</div>`).join('')}
+    </div>
+    <div class="matcher-group">
+      <h4>Definitions</h4>
+      ${right.map((item, i) => `<div class="matcher-item" onclick="selectMatcher(1, ${i})" id="def-1-${i}">${item.def}</div>`).join('')}
+    </div>
+  `;
+  
+  matcherState.pairs = terms.map((t, i) => [Math.floor(i / 3), i % 3, t]);
+  document.getElementById('matcher-game').style.display = 'block';
+};
+
+const closeMatcherGame = () => {
+  document.getElementById('matcher-game').style.display = 'none';
+};
+
+const selectMatcher = (side, index) => {
+  const id = `${side === 0 ? 'term' : 'def'}-${side}-${index}`;
+  const elem = document.getElementById(id);
+  
+  if (elem.classList.contains('matched')) return;
+  
+  if (!matcherState.selected) {
+    matcherState.selected = { side, index, elem };
+    elem.classList.add('selected');
+  } else {
+    const other = matcherState.selected;
+    if (other.side === side && other.index === index) {
+      elem.classList.remove('selected');
+      matcherState.selected = null;
+      return;
+    }
+    
+    const pair = matcherState.pairs.find(p => p[0] === other.side && p[1] === other.index);
+    const otherPair = matcherState.pairs.find(p => p[0] === side && p[1] === index);
+    
+    if (pair === otherPair) {
+      other.elem.classList.remove('selected');
+      other.elem.classList.add('matched');
+      elem.classList.add('matched');
+      matcherState.matched += 1;
+      
+      if (matcherState.matched === 3) {
+        setTimeout(() => alert('🎉 Perfect match! All pairs found!'), 300);
+      }
+    } else {
+      other.elem.classList.remove('selected');
+      elem.classList.add('selected');
+      matcherState.selected = { side, index, elem };
+    }
+  }
+  
+  document.getElementById('matcher-score').textContent = `${matcherState.matched}/6`;
+};
+
+// Trivia Game
+let triviaState = { score: 0, current: 0, answered: false };
+
+const triviaQuestions = [
+  { q: 'What is the smallest unit of life?', a: 'Cell', opts: ['Cell', 'Atom', 'Molecule', 'Gene'] },
+  { q: 'Which organelle produces energy?', a: 'Mitochondria', opts: ['Ribosome', 'Mitochondria', 'Nucleus', 'Golgi'] },
+  { q: 'What does DNA stand for?', a: 'Deoxyribonucleic Acid', opts: ['Deoxyribonucleic Acid', 'Digital Network Access', 'Data Not Available', 'Direct Neural Array'] },
+  { q: 'In physics, what is measured in joules?', a: 'Energy', opts: ['Force', 'Energy', 'Momentum', 'Velocity'] },
+  { q: 'What is the pH of a neutral solution?', a: '7', opts: ['0', '7', '14', '10'] },
+  { q: 'Bitcoin operates on which technology?', a: 'Blockchain', opts: ['Cloud', 'Blockchain', 'Quantum', 'AI'] },
+  { q: 'What does ROI stand for?', a: 'Return on Investment', opts: ['Rate of Interest', 'Return on Investment', 'Risk of Impact', 'Revenue on Income'] },
+  { q: 'Which is a figure of speech?', a: 'Metaphor', opts: ['Noun', 'Verb', 'Metaphor', 'Preposition'] },
+  { q: 'What does a derivative measure?', a: 'Rate of change', opts: ['Total distance', 'Rate of change', 'Average speed', 'Final value'] },
+  { q: 'Spanish word for friend?', a: 'Amigo', opts: ['Hermano', 'Amigo', 'Padre', 'Libro'] }
+];
+
+const startTriviaGame = () => {
+  triviaState = { score: 0, current: 0, answered: false };
+  document.getElementById('trivia-game').style.display = 'block';
+  showTriviaQuestion();
+};
+
+const closeTriviaGame = () => {
+  document.getElementById('trivia-game').style.display = 'none';
+};
+
+const showTriviaQuestion = () => {
+  if (triviaState.current >= triviaQuestions.length) {
+    const container = document.getElementById('trivia-container');
+    container.innerHTML = `
+      <div style="text-align: center; padding: 2rem;">
+        <h3>Game Over!</h3>
+        <p style="font-size: 1.5rem; margin: 1rem 0;">You scored ${triviaState.score} out of ${triviaQuestions.length}</p>
+        <p style="color: var(--muted);">${triviaState.score === triviaQuestions.length ? '🌟 Perfect score!' : triviaState.score >= 7 ? '🎉 Great job!' : 'Keep learning!'}</p>
+      </div>
+    `;
+    return;
+  }
+  
+  const q = triviaQuestions[triviaState.current];
+  const container = document.getElementById('trivia-container');
+  triviaState.answered = false;
+  
+  container.innerHTML = `
+    <div class="trivia-question">
+      <h4>${triviaState.current + 1}. ${q.q}</h4>
+      <div class="trivia-options">
+        ${q.opts.map(opt => `<div class="trivia-option" onclick="answerTrivia('${opt}', '${q.a}')">${opt}</div>`).join('')}
+      </div>
+    </div>
+  `;
+};
+
+const answerTrivia = (selected, correct) => {
+  if (triviaState.answered) return;
+  triviaState.answered = true;
+  
+  const options = document.querySelectorAll('.trivia-option');
+  options.forEach(opt => {
+    opt.style.pointerEvents = 'none';
+    if (opt.textContent === correct) {
+      opt.classList.add('correct');
+    } else if (opt.textContent === selected && selected !== correct) {
+      opt.classList.add('incorrect');
+    }
+  });
+  
+  if (selected === correct) {
+    triviaState.score += 1;
+  }
+  
+  document.getElementById('trivia-score').textContent = triviaState.score;
+  
+  setTimeout(() => {
+    triviaState.current += 1;
+    showTriviaQuestion();
+  }, 1500);
+};
+
+// Portfolio Allocator Game
+let portfolioState = { allocations: {} };
+
+const startPortfolioGame = () => {
+  portfolioState = {
+    stocks: 0,
+    bonds: 0,
+    crypto: 0,
+    realestate: 0,
+    cash: 0
+  };
+  
+  const container = document.getElementById('portfolio-container');
+  container.innerHTML = `
+    <div class="allocation-item">
+      <div class="allocation-label">📈 Stocks</div>
+      <div class="allocation-input"><input type="range" id="stocks" min="0" max="100000" value="0" oninput="updatePortfolioDisplay()"></div>
+      <div class="allocation-value">$<span id="stocks-val">0</span></div>
+    </div>
+    <div class="allocation-item">
+      <div class="allocation-label">📊 Bonds</div>
+      <div class="allocation-input"><input type="range" id="bonds" min="0" max="100000" value="0" oninput="updatePortfolioDisplay()"></div>
+      <div class="allocation-value">$<span id="bonds-val">0</span></div>
+    </div>
+    <div class="allocation-item">
+      <div class="allocation-label">₿ Crypto</div>
+      <div class="allocation-input"><input type="range" id="crypto" min="0" max="100000" value="0" oninput="updatePortfolioDisplay()"></div>
+      <div class="allocation-value">$<span id="crypto-val">0</span></div>
+    </div>
+    <div class="allocation-item">
+      <div class="allocation-label">🏠 Real Estate</div>
+      <div class="allocation-input"><input type="range" id="realestate" min="0" max="100000" value="0" oninput="updatePortfolioDisplay()"></div>
+      <div class="allocation-value">$<span id="realestate-val">0</span></div>
+    </div>
+    <div class="allocation-item">
+      <div class="allocation-label">💰 Cash</div>
+      <div class="allocation-input"><input type="range" id="cash" min="0" max="100000" value="20000" oninput="updatePortfolioDisplay()"></div>
+      <div class="allocation-value">$<span id="cash-val">20000</span></div>
+    </div>
+  `;
+  
+  document.getElementById('portfolio-game').style.display = 'block';
+  updatePortfolioDisplay();
+};
+
+const closePortfolioGame = () => {
+  document.getElementById('portfolio-game').style.display = 'none';
+};
+
+const updatePortfolioDisplay = () => {
+  const stocks = parseInt(document.getElementById('stocks').value);
+  const bonds = parseInt(document.getElementById('bonds').value);
+  const crypto = parseInt(document.getElementById('crypto').value);
+  const realestate = parseInt(document.getElementById('realestate').value);
+  const cash = parseInt(document.getElementById('cash').value);
+  
+  const total = stocks + bonds + crypto + realestate + cash;
+  
+  document.getElementById('stocks-val').textContent = stocks.toLocaleString();
+  document.getElementById('bonds-val').textContent = bonds.toLocaleString();
+  document.getElementById('crypto-val').textContent = crypto.toLocaleString();
+  document.getElementById('realestate-val').textContent = realestate.toLocaleString();
+  document.getElementById('cash-val').textContent = cash.toLocaleString();
+  
+  document.getElementById('portfolio-total').textContent = `$${total.toLocaleString()} / $100,000`;
+  
+  if (total === 100000) {
+    const stocks_pct = Math.round(stocks / 1000);
+    const bonds_pct = Math.round(bonds / 1000);
+    const crypto_pct = Math.round(crypto / 1000);
+    const re_pct = Math.round(realestate / 1000);
+    const cash_pct = Math.round(cash / 1000);
+    
+    let advice = '';
+    if (crypto_pct > 30) advice = '⚠️ Very high crypto exposure—risky!';
+    else if (stocks_pct > 60) advice = '📈 Growth-focused portfolio';
+    else if (bonds_pct > 40) advice = '🛡️ Conservative, income-focused';
+    else if (cash_pct > 30) advice = '💰 Defensive stance with dry powder';
+    else advice = '⚖️ Well-diversified portfolio!';
+    
+    document.getElementById('portfolio-result').innerHTML = `
+      <h4>Your Allocation:</h4>
+      <p>📈 Stocks: ${stocks_pct}%</p>
+      <p>📊 Bonds: ${bonds_pct}%</p>
+      <p>₿ Crypto: ${crypto_pct}%</p>
+      <p>🏠 Real Estate: ${re_pct}%</p>
+      <p>💰 Cash: ${cash_pct}%</p>
+      <p style="margin-top: 1rem; font-weight: 600;">${advice}</p>
+    `;
+  } else {
+    document.getElementById('portfolio-result').innerHTML = `<p style="color: var(--muted);">Allocate $${(100000 - total).toLocaleString()} more to complete your portfolio.</p>`;
+  }
+};
+
 // Start generating trades at regular intervals
 if (tradesFeed) {
   generateNewTrade();

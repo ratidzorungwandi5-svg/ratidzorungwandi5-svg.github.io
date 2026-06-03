@@ -766,6 +766,276 @@ body {
   }
 }
 
+.section-games {
+  margin: 4rem 0;
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.game-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  background: var(--surface);
+  transition: all 0.3s ease;
+}
+
+.game-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+}
+
+.game-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  color: var(--text);
+}
+
+.game-card p {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.game-card button {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.game-content {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.game-stats {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(56, 189, 248, 0.08);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.game-stats div {
+  text-align: center;
+}
+
+.game-area {
+  background: rgba(15, 23, 42, 0.4);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  min-height: 300px;
+}
+
+.stock-selector {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.stock-selector label {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.stock-selector input,
+.stock-selector select {
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.holdings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.holding {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: rgba(56, 189, 248, 0.1);
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.holding button {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.holding button:hover {
+  background: #dc2626;
+}
+
+.matcher-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.matcher-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.matcher-group h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.matcher-item {
+  padding: 0.75rem;
+  background: rgba(56, 189, 248, 0.1);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.matcher-item:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: var(--accent);
+}
+
+.matcher-item.selected {
+  background: rgba(56, 189, 248, 0.3);
+  border-color: var(--accent);
+}
+
+.matcher-item.matched {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+  cursor: default;
+}
+
+.trivia-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.trivia-question {
+  margin-bottom: 1rem;
+}
+
+.trivia-question h4 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.trivia-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.trivia-option {
+  padding: 0.75rem 1rem;
+  background: rgba(56, 189, 248, 0.1);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.trivia-option:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: var(--accent);
+}
+
+.trivia-option.correct {
+  background: rgba(16, 185, 129, 0.3);
+  border-color: #10b981;
+}
+
+.trivia-option.incorrect {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: #ef4444;
+}
+
+.portfolio-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.allocation-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.allocation-label {
+  flex: 0 0 120px;
+  font-weight: 600;
+}
+
+.allocation-input {
+  flex: 1;
+}
+
+.allocation-input input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.allocation-value {
+  flex: 0 0 100px;
+  text-align: right;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.portfolio-result {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(56, 189, 248, 0.08);
+  border-radius: 8px;
+  border-left: 4px solid var(--accent);
+}
+
+.portfolio-result h4 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+.portfolio-result p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
 .chat-grid {
   grid-template-columns: 1.5fr 0.9fr;
   align-items: start;
