@@ -391,6 +391,110 @@ if (stockDownloadButton) {
   });
 }
 
+// Live Trades System
+const tradesFeed = document.getElementById('trades-feed');
+const tradesVolume = document.getElementById('trades-volume');
+const tradesCount = document.getElementById('trades-count');
+const tradesAvg = document.getElementById('trades-avg');
+
+let tradeHistory = [];
+let totalVolume = 0;
+let totalTrades = 0;
+
+const generateTrade = () => {
+  const symbols = stockSymbols;
+  const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+  const isLarge = Math.random() > 0.75;
+  const quantity = isLarge 
+    ? Math.floor(Math.random() * 5000) + 2500 
+    : Math.floor(Math.random() * 1000) + 100;
+  
+  const latest = latestStockData[symbol] || { price: 150 };
+  const basePrice = latest.price || 150;
+  const priceVariation = (Math.random() - 0.5) * 2;
+  const price = Math.max(basePrice + priceVariation, 0.01);
+  
+  const tradeValue = quantity * price;
+  const action = Math.random() > 0.48 ? 'buy' : 'sell';
+  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  
+  return {
+    symbol,
+    quantity,
+    price,
+    tradeValue,
+    action,
+    time,
+    timestamp: Date.now()
+  };
+};
+
+const addTradeToFeed = (trade) => {
+  const tradeElement = document.createElement('div');
+  tradeElement.className = `trade-item ${trade.action}`;
+  
+  tradeElement.innerHTML = `
+    <div class="trade-info">
+      <div class="trade-header">
+        <span class="trade-symbol">${trade.symbol}</span>
+        <span class="trade-action ${trade.action}">${trade.action.toUpperCase()}</span>
+      </div>
+      <div class="trade-details">
+        <span>
+          Qty
+          <strong>${trade.quantity.toLocaleString()}</strong>
+        </span>
+        <span>
+          @
+          <strong>$${trade.price.toFixed(2)}</strong>
+        </span>
+      </div>
+    </div>
+    <div>
+      <div class="trade-price">$${trade.tradeValue.toLocaleString('en-US', { maximumFractionDigits: 0 })}</div>
+      <div class="trade-qty">${trade.time}</div>
+    </div>
+  `;
+  
+  if (tradesFeed.querySelector('.trade-placeholder')) {
+    tradesFeed.innerHTML = '';
+  }
+  
+  tradesFeed.insertBefore(tradeElement, tradesFeed.firstChild);
+  
+  while (tradesFeed.children.length > 12) {
+    tradesFeed.removeChild(tradesFeed.lastChild);
+  }
+};
+
+const updateTradeStats = (trade) => {
+  totalTrades += 1;
+  totalVolume += trade.tradeValue;
+  tradeHistory.push(trade);
+  
+  const avgTradeSize = totalVolume / totalTrades;
+  
+  tradesVolume.textContent = '$' + (totalVolume / 1000000).toFixed(2) + 'M';
+  tradesCount.textContent = totalTrades.toLocaleString();
+  tradesAvg.textContent = '$' + avgTradeSize.toLocaleString('en-US', { maximumFractionDigits: 0 });
+};
+
+const generateNewTrade = () => {
+  const trade = generateTrade();
+  addTradeToFeed(trade);
+  updateTradeStats(trade);
+};
+
+// Start generating trades at regular intervals
+if (tradesFeed) {
+  generateNewTrade();
+  setInterval(generateNewTrade, 2500);
+  
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => generateNewTrade(), i * 500);
+  }
+}
+
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
