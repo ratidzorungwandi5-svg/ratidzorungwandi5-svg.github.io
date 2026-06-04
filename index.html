@@ -154,6 +154,14 @@
       </div>
       <div class="stock-board">
         <div class="stock-controls">
+          <div class="stock-settings">
+            <label>
+              Finnhub API key
+              <input id="stock-api-key" type="text" placeholder="Optional Finnhub key" />
+            </label>
+            <button id="stock-connect" class="button secondary" type="button">Connect Live</button>
+            <button id="stock-simulate" class="button secondary" type="button">Simulate</button>
+          </div>
           <span id="stock-last-updated">Last updated: —</span>
           <div class="stock-control-buttons">
             <button id="stock-refresh" class="button secondary" type="button">Refresh now</button>
@@ -214,6 +222,32 @@
             <span class="stat-label">Market Status</span>
             <span class="stat-value status-live">🟢 LIVE</span>
           </div>
+        </div>
+      </div>
+      <div id="portfolio-panel" class="portfolio-panel">
+        <h3>Portfolio (Live)</h3>
+        <div class="portfolio-controls">
+          <label>Cash: $<span id="portfolio-cash">10000.00</span></label>
+          <input id="portfolio-set-cash" placeholder="Set cash amount" />
+          <button id="portfolio-set-cash-btn" class="button secondary">Set Cash</button>
+        </div>
+
+        <div class="portfolio-actions">
+          <table id="portfolio-actions-table">
+            <thead><tr><th>Symbol</th><th>Price</th><th>Qty</th><th>Buy</th><th>Sell</th></tr></thead>
+            <tbody>
+              <!-- populated by script.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="portfolio-holdings">
+          <h4>Holdings</h4>
+          <table id="portfolio-holdings-table">
+            <thead><tr><th>Symbol</th><th>Qty</th><th>Avg Price</th><th>Market Value</th></tr></thead>
+            <tbody></tbody>
+            <tfoot><tr><td colspan="3">Total Value</td><td id="portfolio-total">$0.00</td></tr></tfoot>
+          </table>
         </div>
       </div>
     </section>
@@ -372,8 +406,20 @@
             Ask a question
             <input id="chat-input" type="text" placeholder="How should I think about bitcoin?" required />
           </label>
+          <label class="chat-key-input">
+            OpenAI API Key (optional)
+            <input id="chat-api-key" type="password" placeholder="sk-..." />
+          </label>
+          <div class="chat-mode">
+            <label>
+              <input id="chat-simulated" type="radio" name="chat-mode" value="simulate" checked /> Simulated
+            </label>
+            <label>
+              <input id="chat-smart" type="radio" name="chat-mode" value="smart" /> Smart API
+            </label>
+          </div>
           <button class="button primary" type="submit">Send</button>
-          <p class="chat-note">This chatbot offers general investing guidance, not personalized financial advice.</p>
+          <p class="chat-note">This chatbot offers general guidance. Use OpenAI key for smarter responses if you want.</p>
           <div class="chat-examples">
             <p>Need inspiration? Try asking:</p>
             <ul>

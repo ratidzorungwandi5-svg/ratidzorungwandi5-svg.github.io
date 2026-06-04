@@ -7,8 +7,14 @@ const formMessage = document.getElementById('form-message');
 const chatForm = document.getElementById('chat-form');
 const chatWindow = document.getElementById('chat-window');
 const chatInput = document.getElementById('chat-input');
+const chatApiKeyInput = document.getElementById('chat-api-key');
+const chatSmartRadio = document.getElementById('chat-smart');
+const chatSimulatedRadio = document.getElementById('chat-simulated');
 const stockRefreshButton = document.getElementById('stock-refresh');
 const stockDownloadButton = document.getElementById('stock-download');
+const stockApiKeyInput = document.getElementById('stock-api-key');
+const stockConnectButton = document.getElementById('stock-connect');
+const stockSimulateButton = document.getElementById('stock-simulate');
 const stockBoardBody = document.getElementById('stock-prices-body');
 const stockLastUpdated = document.getElementById('stock-last-updated');
 const stockChangeLog = document.getElementById('stock-change-log');
@@ -90,19 +96,30 @@ const appendStockChange = (row, previous) => {
 
 const updateStockBoard = (rows) => {
   if (!stockBoardBody || !stockLastUpdated) return;
-
   const now = Date.now();
-  const tableRows = rows.map((row) => {
-    const previous = previousStockPrices[row.symbol];
+
+  rows.forEach((row) => {
     if (row.price != null) {
-      stockHistory[row.symbol] = [...(stockHistory[row.symbol] || []), { price: row.price, time: now }];
-      stockHistory[row.symbol] = stockHistory[row.symbol].filter((snapshot) => now - snapshot.time <= 24 * 60 * 60 * 1000);
-      latestStockData[row.symbol] = { price: row.price, open: row.open };
+      latestStockData[row.symbol] = {
+        price: row.price,
+        open: row.open ?? latestStockData[row.symbol]?.open,
+        time: row.time || new Date().toLocaleTimeString()
+      };
+    }
+  });
+
+  const tableRows = stockSymbols.map((symbol) => {
+    const row = latestStockData[symbol] || { symbol, price: null, open: null, time: '—' };
+    const previous = previousStockPrices[symbol];
+
+    if (row.price != null) {
+      stockHistory[symbol] = [...(stockHistory[symbol] || []), { price: row.price, time: now }];
+      stockHistory[symbol] = stockHistory[symbol].filter((snapshot) => now - snapshot.time <= 24 * 60 * 60 * 1000);
     }
 
-    const delta1s = row.price != null ? computeDelta(row.symbol, 1000, row.price) : null;
-    const delta1m = row.price != null ? computeDelta(row.symbol, 60 * 1000, row.price) : null;
-    const delta1h = row.price != null ? computeDelta(row.symbol, 60 * 60 * 1000, row.price) : null;
+    const delta1s = row.price != null ? computeDelta(symbol, 1000, row.price) : null;
+    const delta1m = row.price != null ? computeDelta(symbol, 60 * 1000, row.price) : null;
+    const delta1h = row.price != null ? computeDelta(symbol, 60 * 60 * 1000, row.price) : null;
     const delta1d = row.price != null && row.open != null ? row.price - row.open : null;
 
     const delta1sClass = formatDeltaClass(delta1s);
@@ -110,14 +127,17 @@ const updateStockBoard = (rows) => {
     const delta1hClass = formatDeltaClass(delta1h);
     const delta1dClass = formatDeltaClass(delta1d);
 
-    if (row.price != null) {
+    if (row.price != null && row.price !== previous) {
       appendStockChange(row, previous);
-      previousStockPrices[row.symbol] = row.price;
+      previousStockPrices[symbol] = row.price;
+      if (typeof PortfolioManager !== 'undefined' && PortfolioManager.onPriceUpdate) {
+        try { PortfolioManager.onPriceUpdate(symbol, row.price); } catch (e) {}
+      }
     }
 
     return `
-      <tr data-symbol="${row.symbol}">
-        <td>${row.symbol}</td>
+      <tr data-symbol="${symbol}">
+        <td>${symbol}</td>
         <td>${row.price != null ? `$${row.price.toFixed(2)}` : 'N/A'}</td>
         <td class="delta-cell delta-1s ${delta1sClass}">${formatDelta(delta1s)}</td>
         <td class="delta-cell delta-1m ${delta1mClass}">${formatDelta(delta1m)}</td>
@@ -173,6 +193,7 @@ const updateStockDeltas = () => {
 
 const fetchStockPrices = async () => {
   if (!stockBoardBody || !stockLastUpdated) return;
+  stopStockSimulation();
 
   const symbolQuery = stockSymbols.map((symbol) => `${symbol.toLowerCase()}.us`).join(',');
   const url = `https://stooq.com/q/l/?s=${symbolQuery}&f=sd2t2ohlcv&h&e=csv`;
@@ -183,6 +204,92 @@ const fetchStockPrices = async () => {
 
   const results = parseStooqCsv(responseText);
   updateStockBoard(results);
+};
+
+let finnStockSocket = null;
+let simulatedStockInterval = null;
+
+const connectFinnhubStocks = (apiKey) => {
+  if (finnStockSocket) finnStockSocket.close();
+  finnStockSocket = new WebSocket(`wss://ws.finnhub.io?token=${encodeURIComponent(apiKey)}`);
+
+  finnStockSocket.addEventListener('open', () => {
+    stockSymbols.forEach((symbol) => {
+      finnStockSocket.send(JSON.stringify({ type: 'subscribe', symbol }));
+    });
+  });
+
+  finnStockSocket.addEventListener('message', (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      if (data.type === 'trade' && Array.isArray(data.data)) {
+        data.data.forEach((trade) => {
+          if (trade.s && trade.p != null) {
+            updateStockBoard([{ symbol: trade.s, price: trade.p, open: latestStockData[trade.s]?.open ?? trade.p, time: new Date().toLocaleTimeString() }]);
+          }
+        });
+      }
+    } catch (error) {
+      console.warn('Finnhub trade parse error', error);
+    }
+  });
+
+  finnStockSocket.addEventListener('close', () => {
+    console.log('Finnhub socket closed');
+  });
+
+  finnStockSocket.addEventListener('error', (error) => {
+    console.warn('Finnhub socket error', error);
+    fetchStockPrices();
+  });
+};
+
+const stopStockSimulation = () => {
+  if (simulatedStockInterval) {
+    clearInterval(simulatedStockInterval);
+    simulatedStockInterval = null;
+  }
+};
+
+const simulateStockPrices = () => {
+  stopStockSimulation();
+  const state = {};
+  stockSymbols.forEach((symbol) => {
+    const price = latestStockData[symbol]?.price || 100 + Math.random() * 50;
+    state[symbol] = price;
+  });
+
+  simulatedStockInterval = setInterval(() => {
+    const updates = [];
+    stockSymbols.forEach((symbol) => {
+      const change = (Math.random() - 0.45) * 2;
+      state[symbol] = Math.max(1, state[symbol] + change);
+      updates.push({ symbol, price: Number(state[symbol].toFixed(2)), open: latestStockData[symbol]?.open ?? state[symbol], time: new Date().toLocaleTimeString() });
+    });
+    updateStockBoard(updates);
+  }, 2000);
+};
+
+const updatePortfolioPriceCells = () => {
+  document.querySelectorAll('#portfolio-actions-table .live-price').forEach((cell) => {
+    const symbol = cell.dataset.symbol;
+    const price = latestStockData[symbol]?.price;
+    cell.textContent = price != null ? `$${price.toFixed(2)}` : '—';
+  });
+};
+
+const refreshStockPrices = () => {
+  if (finnStockSocket && finnStockSocket.readyState === WebSocket.OPEN) {
+    return;
+  }
+  fetchStockPrices();
+};
+
+const stopFinnhubStocks = () => {
+  if (finnStockSocket) {
+    finnStockSocket.close();
+    finnStockSocket = null;
+  }
 };
 
 const definitions = {
@@ -604,23 +711,81 @@ if (contactForm) {
 }
 
 if (chatForm) {
-  chatForm.addEventListener('submit', (event) => {
+  chatForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     if (!chatInput || !chatInput.value.trim()) return;
 
     const userText = chatInput.value.trim();
     appendChatMessage('user', userText);
     chatInput.value = '';
+    appendChatMessage('bot', 'Typing...');
 
-    window.setTimeout(() => {
-      const response = getChatResponse(userText);
-      appendChatMessage('bot', response);
-    }, 450);
+    const useSmart = chatSmartRadio?.checked;
+    const key = chatApiKeyInput?.value.trim();
+    let reply = '';
+
+    if (useSmart && !key) {
+      reply = 'Please enter an OpenAI API key to use smart mode, or switch to simulated mode.';
+    } else if (useSmart) {
+      try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${key}`
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: [{ role: 'user', content: userText }],
+            temperature: 0.3,
+            max_tokens: 320
+          })
+        });
+        if (!response.ok) {
+          const errText = await response.text();
+          throw new Error(`OpenAI error ${response.status}: ${errText}`);
+        }
+        const data = await response.json();
+        reply = data?.choices?.[0]?.message?.content?.trim() || 'I did not receive a valid response.';
+      } catch (error) {
+        reply = `Smart mode failed: ${error.message}. Falling back to simulated response.`;
+        reply += '\n' + getChatResponse(userText);
+      }
+    } else {
+      reply = getChatResponse(userText);
+    }
+
+    const botMessages = chatWindow.querySelectorAll('.chat-message.bot');
+    const lastBot = botMessages[botMessages.length - 1];
+    if (lastBot && lastBot.textContent?.startsWith('Typing...')) {
+      lastBot.querySelector('.message-bubble').innerHTML = `<p>${reply}</p>`;
+    } else {
+      appendChatMessage('bot', reply);
+    }
   });
 }
 
 if (stockRefreshButton) {
-  stockRefreshButton.addEventListener('click', fetchStockPrices);
+  stockRefreshButton.addEventListener('click', refreshStockPrices);
+}
+
+if (stockConnectButton) {
+  stockConnectButton.addEventListener('click', () => {
+    const key = stockApiKeyInput?.value.trim();
+    if (!key) {
+      alert('Enter a Finnhub API key to connect to live quotes.');
+      return;
+    }
+    stopStockSimulation();
+    connectFinnhubStocks(key);
+  });
+}
+
+if (stockSimulateButton) {
+  stockSimulateButton.addEventListener('click', () => {
+    stopFinnhubStocks();
+    simulateStockPrices();
+  });
 }
 
 if (stockDownloadButton) {
@@ -1121,3 +1286,111 @@ if ('serviceWorker' in navigator) {
 fetchStockPrices();
 setInterval(fetchStockPrices, 10000);
 setInterval(updateStockDeltas, 1000);
+
+// Persistent Portfolio UI + logic (live prices)
+const portfolioCashEl = () => document.getElementById('portfolio-cash');
+const portfolioSetInput = () => document.getElementById('portfolio-set-cash');
+const portfolioSetBtn = () => document.getElementById('portfolio-set-cash-btn');
+const portfolioActionsTbody = () => document.querySelector('#portfolio-actions-table tbody');
+const portfolioHoldingsTbody = () => document.querySelector('#portfolio-holdings-table tbody');
+const portfolioTotalEl = () => document.getElementById('portfolio-total');
+
+const PortfolioManager = (() => {
+  let cash = 10000;
+  const holdings = new Map();
+
+  function format(n){ return '$' + Number(n||0).toFixed(2); }
+
+  function setCash(v){
+    const n = Number(v);
+    if (Number.isNaN(n)) return alert('Invalid cash');
+    cash = n; render();
+  }
+
+  function buy(sym, qty){
+    qty = Math.floor(Number(qty));
+    if (!qty || qty <= 0) return alert('Invalid quantity');
+    const price = latestStockData[sym]?.price;
+    if (!price) return alert('Price unavailable for ' + sym);
+    const cost = qty * price;
+    if (cost > cash) return alert('Insufficient funds');
+    const cur = holdings.get(sym) || {qty:0, avg:0};
+    const newQty = cur.qty + qty;
+    const newAvg = (cur.avg*cur.qty + price*qty) / newQty;
+    holdings.set(sym, {qty: newQty, avg: newAvg});
+    cash -= cost;
+    render();
+  }
+
+  function sell(sym, qty){
+    qty = Math.floor(Number(qty));
+    if (!qty || qty <= 0) return alert('Invalid quantity');
+    const cur = holdings.get(sym);
+    if (!cur || cur.qty < qty) return alert('Not enough shares to sell');
+    const price = latestStockData[sym]?.price;
+    if (!price) return alert('Price unavailable for ' + sym);
+    const proceeds = qty * price;
+    const newQty = cur.qty - qty;
+    if (newQty === 0) holdings.delete(sym);
+    else holdings.set(sym, {qty:newQty, avg:cur.avg});
+    cash += proceeds;
+    render();
+  }
+
+  function onPriceUpdate(sym, price){ render(); }
+
+  function render(){
+    if (!portfolioCashEl()) return;
+    portfolioCashEl().textContent = cash.toFixed(2);
+    const tbody = portfolioHoldingsTbody();
+    tbody.innerHTML = '';
+    let total = cash;
+    for (const [sym, h] of holdings){
+      const price = latestStockData[sym]?.price || 0;
+      const mval = h.qty * price;
+      total += mval;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${sym}</td><td>${h.qty}</td><td>${format(h.avg)}</td><td>${format(mval)}</td>`;
+      tbody.appendChild(tr);
+    }
+    portfolioTotalEl().textContent = format(total);
+  }
+
+  return {setCash, buy, sell, onPriceUpdate, render, getCash:()=>cash};
+})();
+
+// build actions table
+if (portfolioActionsTbody) {
+  const tb = portfolioActionsTbody();
+  tb.innerHTML = '';
+  stockSymbols.forEach(sym => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${sym}</td>
+      <td class="live-price" data-symbol="${sym}">—</td>
+      <td><input class="portfolio-qty" value="1" style="width:60px"/></td>
+      <td><button class="button secondary buy-btn">Buy</button></td>
+      <td><button class="button secondary sell-btn">Sell</button></td>
+    `;
+    tb.appendChild(tr);
+    const qtyInput = tr.querySelector('.portfolio-qty');
+    tr.querySelector('.buy-btn').addEventListener('click', ()=> PortfolioManager.buy(sym, Number(qtyInput.value)||1));
+    tr.querySelector('.sell-btn').addEventListener('click', ()=> PortfolioManager.sell(sym, Number(qtyInput.value)||1));
+  });
+}
+
+// update live price cells when stock board updates
+const updatePortfolioPrices = () => {
+  document.querySelectorAll('#portfolio-actions-table .live-price').forEach(td => {
+    const sym = td.dataset.symbol;
+    const price = latestStockData[sym]?.price;
+    td.textContent = price ? `$${price.toFixed(2)}` : '—';
+  });
+};
+
+setInterval(updatePortfolioPrices, 1000);
+
+if (portfolioSetBtn()) portfolioSetBtn().addEventListener('click', ()=> PortfolioManager.setCash(portfolioSetInput().value || 0));
+
+// initial render
+PortfolioManager.render();
